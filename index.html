@@ -558,7 +558,7 @@ function openDetail(r,isApprover){
   const docWrap=document.getElementById("dDocWrap");
   if(r.DocLink&&r.DocLink.trim()){docWrap.classList.remove("hidden");document.getElementById("dDocLink").href=r.DocLink;}
   else docWrap.classList.add("hidden");
-  document.getElementById("dApprover").value=r.ApproverIC||"";
+  document.getElementById("dApprover").value=r.ApproverName||r.ApproverIC||"";
   const approveWrap=document.getElementById("detailApproveWrap");
   if(isApprover&&status==="Pending") approveWrap.classList.remove("hidden");
   else approveWrap.classList.add("hidden");
