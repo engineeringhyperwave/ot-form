@@ -215,6 +215,18 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <input type="email" id="pEmail">
     <button class="btn" onclick="saveProfile()">Save Changes</button>
   </div>
+  <div class="card">
+    <h2>Change Password</h2>
+    <label>Current Password <span>*</span></label>
+    <input type="password" id="cpCurrent" placeholder="Current password" oninput="removeInvalid(this)">
+    <label>New Password <span>*</span></label>
+    <input type="password" id="cpNew" placeholder="New password" oninput="removeInvalid(this)">
+    <label>Confirm New Password <span>*</span></label>
+    <input type="password" id="cpConfirm" placeholder="Repeat new password" oninput="removeInvalid(this)">
+    <p class="error-msg" id="cpError">Please fill in all fields.</p>
+    <p id="cpSuccess" style="color:#1d7a3a;font-size:14px;margin-top:10px;display:none;font-weight:bold">✅ Password changed successfully.</p>
+    <button class="btn" id="btnChangePass" onclick="changePassword()">Change Password</button>
+  </div>
 </div>
 
 <!-- OWN / TEAM -->
@@ -546,7 +558,7 @@ function openDetail(r,isApprover){
   const docWrap=document.getElementById("dDocWrap");
   if(r.DocLink&&r.DocLink.trim()){docWrap.classList.remove("hidden");document.getElementById("dDocLink").href=r.DocLink;}
   else docWrap.classList.add("hidden");
-  document.getElementById("dApprover").value=r.ApproverName||r.ApproverIC||"";
+  document.getElementById("dApprover").value=r.ApproverIC||"";
   const approveWrap=document.getElementById("detailApproveWrap");
   if(isApprover&&status==="Pending") approveWrap.classList.remove("hidden");
   else approveWrap.classList.add("hidden");
@@ -675,9 +687,10 @@ function loadAnalysis(){
       const pendingReqs=pending.requests||[];
       const approved=allReqs.filter(r=>r.Status==="Approved");
       const rejected=allReqs.filter(r=>r.Status==="Rejected");
+      const pendingAll=allReqs.filter(r=>r.Status==="Pending");
       const total=allReqs.length;
       document.getElementById("statTotal").textContent=total;
-      document.getElementById("statPending").textContent=pendingReqs.length;
+      document.getElementById("statPending").textContent=pendingAll.length;
       document.getElementById("statApproved").textContent=approved.length;
       document.getElementById("statRejected").textContent=rejected.length;
       // by month
@@ -736,6 +749,32 @@ function filterMaster(){
   const filtered=filter?allMasterData.filter(r=>monthKey(r.Timestamp)===filter):allMasterData;
   renderMaster(filtered);
 }
+function changePassword(){
+  const current=document.getElementById("cpCurrent").value.trim();
+  const newPw=document.getElementById("cpNew").value.trim();
+  const confirm=document.getElementById("cpConfirm").value.trim();
+  const err=document.getElementById("cpError");
+  const suc=document.getElementById("cpSuccess");
+  suc.style.display="none";
+  if(!current||!newPw||!confirm){err.style.display="block";err.textContent="Please fill in all fields.";return;}
+  if(newPw!==confirm){err.style.display="block";err.textContent="New passwords do not match.";return;}
+  err.style.display="none";
+  const btn=document.getElementById("btnChangePass");
+  btn.disabled=true;btn.textContent="Updating...";
+  callAPI({action:"changePassword",email:currentUser.WorkEmail,currentPassword:current,newPassword:newPw}).then(res=>{
+    btn.disabled=false;btn.textContent="Change Password";
+    if(res.success){
+      suc.style.display="block";
+      document.getElementById("cpCurrent").value="";
+      document.getElementById("cpNew").value="";
+      document.getElementById("cpConfirm").value="";
+    }else{
+      err.style.display="block";
+      err.textContent=res.error||"Failed to change password.";
+    }
+  }).catch(()=>{btn.disabled=false;btn.textContent="Change Password";alert("Error. Please try again.");});
+}
+
 function renderMaster(records){
   const container=document.getElementById("masterList");
   if(!records||records.length===0){container.innerHTML='<p class="empty-msg">No approved records found.</p>';return;}
