@@ -689,11 +689,6 @@ function loadAnalysis(){
         else if(r.Status==="Rejected") byMonth[mk].rejected++;
         else byMonth[mk].pending++;
       });
-      pendingReqs.forEach(r=>{
-        const mk=monthKey(r.Timestamp);
-        if(!byMonth[mk]) byMonth[mk]={approved:0,rejected:0,pending:0};
-        byMonth[mk].pending++;
-      });
       const container=document.getElementById("analysisByMonth");
       const keys=Object.keys(byMonth).sort().reverse();
       if(keys.length===0){container.innerHTML='<p class="empty-msg">No records found.</p>';return;}
