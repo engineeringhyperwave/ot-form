@@ -8,7 +8,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f5f5;color:#333;font-size:16px}
 .header{background:#fff;padding:12px 15px;text-align:center;border-bottom:3px solid #ff6200;position:sticky;top:0;z-index:99}
-.header img{height:45px}
 .container{max-width:500px;margin:0 auto;padding:15px 15px 60px}
 .card{background:#fff;border-radius:10px;padding:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
 h2{font-size:18px;color:#000;margin-bottom:5px}
@@ -18,13 +17,14 @@ label{font-size:14px;color:#444;display:block;margin-bottom:5px;margin-top:14px}
 label span{color:#ff6200}
 input[type=text],input[type=tel],input[type=email],input[type=date],input[type=time],input[type=password],textarea,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;-webkit-appearance:none;appearance:none;background:#fff}
 input:focus,textarea:focus,select:focus{border-color:#ff6200;outline:none}
-input:disabled{background:#f0f0f0;color:#888}
+input:disabled,textarea:disabled,select:disabled{background:#f5f5f5;color:#555;border-color:#eee}
 textarea{resize:none;height:70px}
 .invalid-field{border-color:#dc3545!important;box-shadow:0 0 0 3px rgba(220,53,69,0.15)}
 .btn{width:100%;padding:15px;background:#ff6200;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:15px;font-weight:bold}
 .btn:active{background:#ea5a00}
 .btn:disabled{background:#ccc;cursor:not-allowed}
 .btn-outline{width:100%;padding:13px;background:#fff;color:#ff6200;border:1.5px solid #ff6200;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
+.btn-print{width:100%;padding:13px;background:#fff;color:#333;border:1.5px solid #ccc;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
 .hidden{display:none}
 .error-msg{color:#dc3545;font-size:14px;margin-top:12px;display:none;font-weight:bold;background:#fff5f5;padding:10px;border-radius:6px;border:1px solid #ffcccc}
 .radio-group{display:flex;gap:10px;margin-top:8px}
@@ -32,22 +32,25 @@ textarea{resize:none;height:70px}
 .radio-label input{width:18px;height:18px;accent-color:#ff6200}
 .radio-label.selected{border-color:#ff6200;background:#fff4ee;color:#ff6200;font-weight:bold}
 hr{border:none;border-top:1px solid #eee;margin:18px 0}
-.avatar-circle{width:46px;height:46px;border-radius:50%;background:#ff6200;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;cursor:pointer;flex-shrink:0}
+.avatar-circle{width:46px;height:46px;border-radius:50%;background:#ff6200;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .dash-name{font-size:17px;font-weight:bold}
 .dash-role{font-size:12px;color:#999}
-.req-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:10px}
-.req-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.req-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;transition:box-shadow 0.15s}
+.req-item:active{box-shadow:0 2px 8px rgba(255,98,0,0.15)}
+.req-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .req-job{font-weight:bold;font-size:15px}
-.status-pill{font-size:11px;font-weight:bold;padding:4px 10px;border-radius:12px;text-transform:uppercase}
+.req-ref{font-size:11px;color:#999;margin-bottom:4px}
+.req-submitted{font-size:11px;color:#aaa;margin-top:4px}
+.status-pill{font-size:11px;font-weight:bold;padding:4px 10px;border-radius:12px;text-transform:uppercase;flex-shrink:0}
 .status-Pending{background:#fff4d6;color:#b8860b}
 .status-Approved{background:#d6f5dd;color:#1d7a3a}
 .status-Rejected{background:#fde0e0;color:#c0392b}
 .req-detail{font-size:13px;color:#666;line-height:1.6}
 .empty-msg{font-size:14px;color:#999;text-align:center;padding:15px 0}
 .approve-btns{display:flex;gap:8px;margin-top:10px}
-.btn-approve{flex:1;background:#28a745;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer}
-.btn-reject{flex:1;background:#dc3545;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer}
+.btn-approve{flex:1;background:#e8f5e9;color:#2e7d32;border:1.5px solid #a5d6a7;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:14px}
+.btn-reject{flex:1;background:#fce4e4;color:#c62828;border:1.5px solid #ef9a9a;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:14px}
 .team-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .team-num{font-size:14px;color:#666;min-width:18px}
 .team-row input{flex:1;margin-bottom:0}
@@ -60,6 +63,38 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .success-wrap h2{color:#28a745;font-size:22px;margin-bottom:10px}
 .success-wrap p{color:#666;font-size:15px;line-height:1.6}
 .loading-text{text-align:center;color:#999;font-size:14px;padding:10px}
+.status-banner{border-radius:8px;padding:14px;margin-bottom:15px}
+.status-banner-Pending{background:#fff4d6;border:1.5px solid #f0c040}
+.status-banner-Approved{background:#d6f5dd;border:1.5px solid #81c784}
+.status-banner-Rejected{background:#fde0e0;border:1.5px solid #e57373}
+.status-banner-label{font-size:12px;color:#888;text-transform:uppercase;margin-bottom:4px}
+.status-banner-ref{font-size:13px;color:#555;margin-bottom:2px}
+.status-banner-status{font-size:18px;font-weight:bold;margin-bottom:6px}
+.status-banner-meta{font-size:12px;color:#666;line-height:1.7}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.stat-card{background:#fff;border-radius:10px;padding:15px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.stat-num{font-size:32px;font-weight:bold;margin-bottom:4px}
+.stat-label{font-size:12px;color:#888;text-transform:uppercase}
+.stat-Approved .stat-num{color:#1d7a3a}
+.stat-Rejected .stat-num{color:#c0392b}
+.stat-Pending .stat-num{color:#b8860b}
+.stat-Total .stat-num{color:#ff6200}
+.month-section{margin-bottom:12px}
+.month-header{font-size:13px;font-weight:bold;color:#555;padding:8px 0;border-bottom:1px solid #eee;margin-bottom:8px}
+.master-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer}
+.master-item-row{display:flex;justify-content:space-between;align-items:center}
+.master-name{font-weight:bold;font-size:14px}
+.master-detail{font-size:12px;color:#666;margin-top:4px;line-height:1.6}
+@media print{
+  .header,.back-link,.btn,.btn-outline,.btn-print,.approve-btns,.no-print{display:none!important}
+  body{background:#fff}
+  .container{padding:0;max-width:100%}
+  .card{box-shadow:none;border:1px solid #ddd;margin-bottom:10px}
+  .print-header{display:block!important}
+}
+.print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #ff6200}
+.print-header h1{font-size:20px;color:#ff6200}
+.print-header p{font-size:12px;color:#666}
 </style>
 </head>
 <body>
@@ -70,610 +105,664 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 
 <div class="container">
 
-  <!-- STEP 1: Login -->
-  <div id="stepLogin">
-    <div class="card">
-      <h2>Login</h2>
-      <p class="subtitle">Enter your work email and password to continue.</p>
-      <label>Work Email <span>*</span></label>
-      <input type="email" id="loginEmail" placeholder="name@hyper-wave.com">
-      <label>Password <span>*</span></label>
-      <input type="password" id="loginPassword" placeholder="Password">
-      <p class="error-msg" id="icError">Invalid email or password. Please try again.</p>
-      <button class="btn" id="btnLogin" onclick="doLogin()">Login →</button>
-      <button class="btn-outline" onclick="show('stepRegister')">New User? Register Here</button>
-    </div>
+<!-- LOGIN -->
+<div id="stepLogin">
+  <div class="card">
+    <h2>Login</h2>
+    <p class="subtitle">Enter your work email and password to continue.</p>
+    <label>Work Email <span>*</span></label>
+    <input type="email" id="loginEmail" placeholder="name@hyper-wave.com">
+    <label>Password <span>*</span></label>
+    <input type="password" id="loginPassword" placeholder="Password">
+    <p class="error-msg" id="loginError">Invalid email or password.</p>
+    <button class="btn" id="btnLogin" onclick="doLogin()">Login →</button>
+    <button class="btn-outline" onclick="show('stepRegister')">New User? Register Here</button>
   </div>
-
-  <!-- STEP 2: Register -->
-  <div id="stepRegister" class="hidden">
-    <div class="card">
-      <span class="back-link" onclick="show('stepLogin')">← Back to Login</span>
-      <h2>New User Registration</h2>
-      <p class="subtitle">Please fill in your details to create an account.</p>
-
-      <label>Full Name <span>*</span></label>
-      <input type="text" id="regName" oninput="removeInvalid(this)">
-
-      <label>NRIC / Passport No. <span>*</span></label>
-      <input type="text" id="regIC" oninput="removeInvalid(this)">
-
-      <label>Branch <span>*</span></label>
-      <select id="regBranch" oninput="removeInvalid(this)">
-        <option value="">Select Branch</option>
-        <option>Puchong,Selangor</option>
-        <option>Kota Kinabalu,Sabah</option>
-        <option>Tamparuli,Sabah</option>
-        <option>Bintulu,Sarawak</option>
-        <option>Paka,Terengganu</option>
-        <option>Kota Tinggi,Johor</option>
-        <option>Melaka</option>
-      </select>
-
-      <label>Contact No. <span>*</span></label>
-      <input type="tel" id="regContact" placeholder="+60123456789" oninput="removeInvalid(this)">
-
-      <label>Department <span>*</span></label>
-      <input type="text" id="regDepartment" oninput="removeInvalid(this)">
-
-      <label>Work Email <span>*</span></label>
-      <input type="email" id="regEmail" placeholder="name@hyper-wave.com" oninput="removeInvalid(this)">
-
-      <label>Password <span>*</span></label>
-      <input type="password" id="regPassword" placeholder="Create a password" oninput="removeInvalid(this)">
-
-      <label>Confirm Password <span>*</span></label>
-      <input type="password" id="regPasswordConfirm" placeholder="Repeat password" oninput="removeInvalid(this)">
-
-      <p class="error-msg" id="regError">Please fill in all required fields.</p>
-      <button class="btn" id="btnRegister" onclick="doRegister()">Register →</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: Dashboard -->
-  <div id="stepDashboard" class="hidden">
-    <div class="card">
-      <div class="dash-top">
-        <div>
-          <div class="dash-name" id="dashName"></div>
-          <div class="dash-role" id="dashRole"></div>
-        </div>
-        <div class="avatar-circle" id="avatarCircle" onclick="show('stepProfile')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
-      </div>
-      <button class="btn" onclick="openNewRequest()">+ New OT Request</button>
-    </div>
-
-    <div class="card" id="pendingApprovalCard" class="hidden">
-      <div class="section-tag">Pending My Approval</div>
-      <div id="pendingApprovalList"></div>
-    </div>
-
-    <div class="card">
-      <div class="section-tag">My OT Requests</div>
-      <div id="myRequestsList"><p class="loading-text">Loading...</p></div>
-    </div>
-  </div>
-
-  <!-- PROFILE -->
-  <div id="stepProfile" class="hidden">
-    <div class="card">
-      <span class="back-link" onclick="show('stepDashboard')">← Back</span>
-      <h2>My Profile</h2>
-
-      <label>NRIC / Passport No.</label>
-      <input type="text" id="pIC" disabled>
-
-      <label>Full Name <span>*</span></label>
-      <input type="text" id="pName">
-
-      <label>Branch <span>*</span></label>
-      <select id="pBranch">
-        <option>Puchong,Selangor</option>
-        <option>Kota Kinabalu,Sabah</option>
-        <option>Tamparuli,Sabah</option>
-        <option>Bintulu,Sarawak</option>
-        <option>Paka,Terengganu</option>
-        <option>Kota Tinggi,Johor</option>
-        <option>Melaka</option>
-      </select>
-
-      <label>Contact No. <span>*</span></label>
-      <input type="tel" id="pContact">
-
-      <label>Department <span>*</span></label>
-      <input type="text" id="pDepartment">
-
-      <label>Work Email <span>*</span></label>
-      <input type="email" id="pEmail">
-
-      <button class="btn" onclick="saveProfile()">Save Changes</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: Own / Team -->
-  <div id="stepType" class="hidden">
-    <div class="card">
-      <span class="back-link" onclick="show('stepDashboard')">← Back</span>
-      <h2>OT Request</h2>
-      <p class="subtitle">Is this request for yourself or for your team?</p>
-      <div class="radio-group">
-        <label class="radio-label selected" id="lbl-type-own"><input type="radio" name="reqType" value="Own" checked onchange="handleTypeRadio()"> Own</label>
-        <label class="radio-label" id="lbl-type-team"><input type="radio" name="reqType" value="Team" onchange="handleTypeRadio()"> Team</label>
-      </div>
-
-      <div id="teamMembersWrap" class="hidden">
-        <label style="margin-top:16px">List of Team Members <span>*</span></label>
-        <div id="teamMembersList"></div>
-        <button type="button" class="btn-outline" onclick="addTeamMemberRow()">+ Add Member</button>
-      </div>
-
-      <button class="btn" onclick="goToForm()">Continue →</button>
-    </div>
-  </div>
-
-  <!-- STEP 5: OT Form -->
-  <div id="stepForm" class="hidden">
-    <div class="card">
-      <span class="back-link" onclick="show('stepType')">← Back</span>
-      <div class="section-tag">OT Approval Form</div>
-
-      <label>Branch <span>*</span></label>
-      <select id="fBranch" oninput="removeInvalid(this)" onchange="loadApprovers()">
-        <option value="">Select Branch</option>
-        <option>Puchong,Selangor</option>
-        <option>Kota Kinabalu,Sabah</option>
-        <option>Tamparuli,Sabah</option>
-        <option>Bintulu,Sarawak</option>
-        <option>Paka,Terengganu</option>
-        <option>Kota Tinggi,Johor</option>
-        <option>Melaka</option>
-      </select>
-
-      <label>Job No. <span>*</span></label>
-      <input type="text" id="fJobNo" oninput="removeInvalid(this)">
-
-      <label>Date <span>*</span></label>
-      <input type="date" id="fDate" oninput="removeInvalid(this)">
-
-      <label>OT Time <span>*</span></label>
-      <div style="display:flex;gap:10px;align-items:center">
-        <input type="time" id="fTimeFrom" oninput="removeInvalid(this);calcOTDuration()" style="flex:1">
-        <span style="color:#999;font-size:14px">to</span>
-        <input type="time" id="fTimeTo" oninput="removeInvalid(this);calcOTDuration()" style="flex:1">
-      </div>
-      <p id="otDurationText" style="font-size:13px;color:#ff6200;margin-top:6px;font-weight:bold"></p>
-
-      <label>Work Location <span>*</span></label>
-      <input type="text" id="fWorkLocation" oninput="removeInvalid(this)">
-
-      <label>Reason <span>*</span></label>
-      <textarea id="fReason" oninput="removeInvalid(this)"></textarea>
-
-      <div class="file-input-wrap">
-        <label>Supporting Document (PDF / Image)</label>
-        <input type="file" id="fFile" accept=".pdf,image/*">
-      </div>
-
-      <label style="margin-top:16px">Send To Approver <span>*</span></label>
-      <select id="fApprover" oninput="removeInvalid(this)">
-        <option value="">Select Branch First</option>
-      </select>
-
-      <p class="error-msg" id="formError">Please fill in all required fields.</p>
-      <button class="btn" id="btnSubmitRequest" onclick="submitOTRequest()">Submit Request ✓</button>
-    </div>
-  </div>
-
-  <!-- SUCCESS -->
-  <div id="stepSuccess" class="hidden">
-    <div class="card success-wrap">
-      <div class="success-icon">✅</div>
-      <h2>Request Submitted!</h2>
-      <p>Your OT request has been sent for approval.</p>
-      <button class="btn" onclick="backToDashboard()">Back to Dashboard</button>
-    </div>
-  </div>
-
 </div>
 
-<script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUIQtbRBm9iTITgNgXz1UGcx5BqCrz0IM20BAtHkGp4RroD2LOnxzx5jC9N7lxIt_h/exec";
+<!-- REGISTER -->
+<div id="stepRegister" class="hidden">
+  <div class="card">
+    <span class="back-link" onclick="show('stepLogin')">← Back to Login</span>
+    <h2>New User Registration</h2>
+    <label>Full Name <span>*</span></label>
+    <input type="text" id="regName" oninput="removeInvalid(this)">
+    <label>NRIC / Passport No. <span>*</span></label>
+    <input type="text" id="regIC" oninput="removeInvalid(this)">
+    <label>Branch <span>*</span></label>
+    <select id="regBranch" oninput="removeInvalid(this)">
+      <option value="">Select Branch</option>
+      <option>Puchong,Selangor</option>
+      <option>Kota Kinabalu,Sabah</option>
+      <option>Tamparuli,Sabah</option>
+      <option>Bintulu,Sarawak</option>
+      <option>Paka,Terengganu</option>
+      <option>Kota Tinggi,Johor</option>
+      <option>Melaka</option>
+    </select>
+    <label>Contact No. <span>*</span></label>
+    <input type="tel" id="regContact" placeholder="+60123456789" oninput="removeInvalid(this)">
+    <label>Department <span>*</span></label>
+    <input type="text" id="regDepartment" oninput="removeInvalid(this)">
+    <label>Work Email <span>*</span></label>
+    <input type="email" id="regEmail" placeholder="name@hyper-wave.com" oninput="removeInvalid(this)">
+    <label>Password <span>*</span></label>
+    <input type="password" id="regPassword" placeholder="Create a password" oninput="removeInvalid(this)">
+    <label>Confirm Password <span>*</span></label>
+    <input type="password" id="regPasswordConfirm" placeholder="Repeat password" oninput="removeInvalid(this)">
+    <p class="error-msg" id="regError">Please fill in all required fields.</p>
+    <button class="btn" id="btnRegister" onclick="doRegister()">Register →</button>
+  </div>
+</div>
 
-let currentUser = null;
-let pendingFileData = null;
+<!-- DASHBOARD -->
+<div id="stepDashboard" class="hidden">
+  <div class="card">
+    <div class="dash-top">
+      <div>
+        <div class="dash-name" id="dashName"></div>
+        <div class="dash-role" id="dashRole"></div>
+      </div>
+      <div class="avatar-circle" id="avatarCircle" onclick="openProfile()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </div>
+    </div>
+    <button class="btn" onclick="openNewRequest()">+ New OT Request</button>
+    <div id="approverBtns" class="hidden">
+      <button class="btn-outline" style="margin-top:10px" onclick="show('stepAnalysis');loadAnalysis()">📊 My Approval Analysis</button>
+      <button class="btn-outline" style="margin-top:10px" onclick="show('stepMaster');loadMaster()">📋 Master Record</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="pendingApprovalCard">
+    <div class="section-tag">Pending My Approval</div>
+    <div id="pendingApprovalList"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-tag">My OT Requests</div>
+    <div id="myRequestsList"><p class="loading-text">Loading...</p></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="stepProfile" class="hidden">
+  <div class="card">
+    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
+    <h2>My Profile</h2>
+    <label>NRIC / Passport No.</label>
+    <input type="text" id="pIC" disabled>
+    <label>Full Name <span>*</span></label>
+    <input type="text" id="pName">
+    <label>Branch <span>*</span></label>
+    <select id="pBranch">
+      <option>Puchong,Selangor</option>
+      <option>Kota Kinabalu,Sabah</option>
+      <option>Tamparuli,Sabah</option>
+      <option>Bintulu,Sarawak</option>
+      <option>Paka,Terengganu</option>
+      <option>Kota Tinggi,Johor</option>
+      <option>Melaka</option>
+    </select>
+    <label>Contact No. <span>*</span></label>
+    <input type="tel" id="pContact">
+    <label>Department <span>*</span></label>
+    <input type="text" id="pDepartment">
+    <label>Work Email <span>*</span></label>
+    <input type="email" id="pEmail">
+    <button class="btn" onclick="saveProfile()">Save Changes</button>
+  </div>
+</div>
+
+<!-- OWN / TEAM -->
+<div id="stepType" class="hidden">
+  <div class="card">
+    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
+    <h2>OT Request</h2>
+    <p class="subtitle">Is this request for yourself or for your team?</p>
+    <div class="radio-group">
+      <label class="radio-label selected" id="lbl-type-own"><input type="radio" name="reqType" value="Own" checked onchange="handleTypeRadio()"> Own</label>
+      <label class="radio-label" id="lbl-type-team"><input type="radio" name="reqType" value="Team" onchange="handleTypeRadio()"> Team</label>
+    </div>
+    <div id="teamMembersWrap" class="hidden">
+      <label style="margin-top:16px">List of Team Members <span>*</span></label>
+      <div id="teamMembersList"></div>
+      <button type="button" class="btn-outline" onclick="addTeamMemberRow()">+ Add Member</button>
+    </div>
+    <button class="btn" onclick="goToForm()">Continue →</button>
+  </div>
+</div>
+
+<!-- OT FORM -->
+<div id="stepForm" class="hidden">
+  <div class="card">
+    <span class="back-link" onclick="show('stepType')">← Back</span>
+    <div class="section-tag">OT Approval Form</div>
+    <label>Branch <span>*</span></label>
+    <select id="fBranch" oninput="removeInvalid(this)" onchange="loadApprovers()">
+      <option value="">Select Branch</option>
+      <option>Puchong,Selangor</option>
+      <option>Kota Kinabalu,Sabah</option>
+      <option>Tamparuli,Sabah</option>
+      <option>Bintulu,Sarawak</option>
+      <option>Paka,Terengganu</option>
+      <option>Kota Tinggi,Johor</option>
+      <option>Melaka</option>
+    </select>
+    <label>Job No. <span>*</span></label>
+    <input type="text" id="fJobNo" oninput="removeInvalid(this)">
+    <label>Date <span>*</span></label>
+    <input type="date" id="fDate" oninput="removeInvalid(this)">
+    <label>OT Time <span>*</span></label>
+    <div style="display:flex;gap:10px;align-items:center">
+      <input type="time" id="fTimeFrom" oninput="removeInvalid(this);calcOTDuration()" style="flex:1">
+      <span style="color:#999;font-size:14px">to</span>
+      <input type="time" id="fTimeTo" oninput="removeInvalid(this);calcOTDuration()" style="flex:1">
+    </div>
+    <p id="otDurationText" style="font-size:13px;color:#ff6200;margin-top:6px;font-weight:bold"></p>
+    <label>Work Location <span>*</span></label>
+    <input type="text" id="fWorkLocation" oninput="removeInvalid(this)">
+    <label>Reason <span>*</span></label>
+    <textarea id="fReason" oninput="removeInvalid(this)"></textarea>
+    <div class="file-input-wrap">
+      <label>Supporting Document (PDF / Image)</label>
+      <input type="file" id="fFile" accept=".pdf,image/*">
+    </div>
+    <label style="margin-top:16px">Send To Approver <span>*</span></label>
+    <select id="fApprover" oninput="removeInvalid(this)">
+      <option value="">Select Branch First</option>
+    </select>
+    <p class="error-msg" id="formError">Please fill in all required fields.</p>
+    <button class="btn" id="btnSubmitRequest" onclick="submitOTRequest()">Submit Request ✓</button>
+  </div>
+</div>
+
+<!-- DETAIL PAGE -->
+<div id="stepDetail" class="hidden">
+  <div class="print-header">
+    <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
+    <p>OT Approval Form</p>
+  </div>
+  <div class="card no-print">
+    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
+  </div>
+  <div class="card">
+    <div id="detailStatusBanner"></div>
+    <div class="section-tag">OT Approval Form</div>
+    <label>Branch</label>
+    <input type="text" id="dBranch" disabled>
+    <label>Job No.</label>
+    <input type="text" id="dJobNo" disabled>
+    <label>Date</label>
+    <input type="text" id="dDate" disabled>
+    <label>OT Time</label>
+    <input type="text" id="dTime" disabled>
+    <label>Work Location</label>
+    <input type="text" id="dWorkLocation" disabled>
+    <label>Reason</label>
+    <textarea id="dReason" disabled></textarea>
+    <div id="dTeamWrap" class="hidden">
+      <label>Team Members</label>
+      <textarea id="dTeamMembers" disabled></textarea>
+    </div>
+    <div id="dDocWrap" class="hidden" style="margin-top:14px">
+      <label>Supporting Document</label>
+      <a id="dDocLink" href="#" target="_blank" style="display:block;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;color:#ff6200">📎 View Attachment</a>
+    </div>
+    <label>Submitted To (Approver)</label>
+    <input type="text" id="dApprover" disabled>
+    <div id="detailApproveWrap" class="hidden no-print">
+      <div class="approve-btns" style="margin-top:16px">
+        <button class="btn-approve" id="dBtnApprove" onclick="actOnDetail('Approved')">✓ Approve</button>
+        <button class="btn-reject" id="dBtnReject" onclick="actOnDetail('Rejected')">✗ Reject</button>
+      </div>
+    </div>
+    <button class="btn-print no-print" onclick="window.print()" style="margin-top:15px">🖨️ Print</button>
+  </div>
+</div>
+
+<!-- ANALYSIS -->
+<div id="stepAnalysis" class="hidden">
+  <div class="card">
+    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
+    <h2>My Approval Analysis</h2>
+    <p class="subtitle" id="analysisName"></p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card stat-Total"><div class="stat-num" id="statTotal">-</div><div class="stat-label">Total</div></div>
+    <div class="stat-card stat-Pending"><div class="stat-num" id="statPending">-</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card stat-Approved"><div class="stat-num" id="statApproved">-</div><div class="stat-label">Approved</div></div>
+    <div class="stat-card stat-Rejected"><div class="stat-num" id="statRejected">-</div><div class="stat-label">Rejected</div></div>
+  </div>
+  <div class="card">
+    <div class="section-tag">By Month</div>
+    <div id="analysisByMonth"><p class="loading-text">Loading...</p></div>
+  </div>
+</div>
+
+<!-- MASTER RECORD -->
+<div id="stepMaster" class="hidden">
+  <div class="print-header">
+    <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
+    <p>OT Master Record — Approved Requests</p>
+    <p id="masterPrintBranch"></p>
+  </div>
+  <div class="card no-print">
+    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
+    <h2>Master Record</h2>
+    <p class="subtitle" id="masterSubtitle"></p>
+    <select id="masterMonthFilter" onchange="filterMaster()" style="margin-top:10px">
+      <option value="">All Months</option>
+    </select>
+    <button class="btn-print no-print" onclick="window.print()" style="margin-top:10px">🖨️ Print Master Record</button>
+  </div>
+  <div id="masterList"><p class="loading-text">Loading...</p></div>
+</div>
+
+<!-- SUCCESS -->
+<div id="stepSuccess" class="hidden">
+  <div class="card success-wrap">
+    <div class="success-icon">✅</div>
+    <h2>Request Submitted!</h2>
+    <p>Your OT request has been sent for approval.</p>
+    <button class="btn" onclick="backToDashboard()">Back to Dashboard</button>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzUIQtbRBm9iTITgNgXz1UGcx5BqCrz0IM20BAtHkGp4RroD2LOnxzx5jC9N7lxIt_h/exec";
+let currentUser=null;
+let currentDetail=null;
+let allMasterData=[];
+let teamMemberCount=0;
+
+const ALL_STEPS=["stepLogin","stepRegister","stepDashboard","stepProfile","stepType","stepForm","stepDetail","stepAnalysis","stepMaster","stepSuccess"];
 
 function show(id){
-  ["stepLogin","stepRegister","stepDashboard","stepProfile","stepType","stepForm","stepSuccess"].forEach(s=>{
-    document.getElementById(s).classList.add("hidden");
-  });
+  ALL_STEPS.forEach(s=>document.getElementById(s).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
   window.scrollTo(0,0);
 }
 
-function removeInvalid(el){ el.classList.remove("invalid-field"); }
-function cleanIC(v){ return v.replace(/[^a-zA-Z0-9]/g,"").toUpperCase(); }
+function removeInvalid(el){el.classList.remove("invalid-field");}
 
 function callAPI(payload){
-  return fetch(SCRIPT_URL,{
-    method:"POST",
-    redirect:"follow",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify(payload)
-  }).then(r=>r.json());
+  return fetch(SCRIPT_URL,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).then(r=>r.json());
 }
 
-// ---------------- LOGIN ----------------
+function fmtDate(val){
+  if(!val) return "";
+  const d=new Date(val);
+  if(isNaN(d)) return String(val);
+  return d.toLocaleDateString("en-GB")+" "+d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+}
+
+function fmtDateOnly(val){
+  if(!val) return "";
+  const d=new Date(val);
+  if(isNaN(d)) return String(val);
+  return d.toLocaleDateString("en-GB");
+}
+
+function monthKey(val){
+  if(!val) return "";
+  const d=new Date(val);
+  if(isNaN(d)) return "";
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+}
+
+function monthLabel(key){
+  if(!key) return "";
+  const [y,m]=key.split("-");
+  const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return months[parseInt(m)-1]+" "+y;
+}
+
+// LOGIN
 function doLogin(){
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
-  if(!email || !password){
-    document.getElementById("icError").style.display="block";
-    document.getElementById("icError").textContent="Please enter your email and password.";
-    return;
-  }
-  document.getElementById("icError").style.display="none";
-
-  const btn = document.getElementById("btnLogin");
-  btn.disabled = true; btn.textContent = "Logging in...";
-
-  callAPI({action:"checkLogin", email:email, password:password}).then(data=>{
-    btn.disabled = false; btn.textContent = "Login →";
-    if(data.found){
-      currentUser = data;
-      loadDashboard();
-    } else {
-      document.getElementById("icError").style.display="block";
-      document.getElementById("icError").textContent="Invalid email or password. Please try again.";
-    }
-  }).catch(()=>{
-    btn.disabled = false; btn.textContent = "Login →";
-    alert("Connection error. Please try again.");
-  });
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value.trim();
+  const err=document.getElementById("loginError");
+  if(!email||!password){err.style.display="block";err.textContent="Please enter your email and password.";return;}
+  err.style.display="none";
+  const btn=document.getElementById("btnLogin");
+  btn.disabled=true;btn.textContent="Logging in...";
+  callAPI({action:"checkLogin",email,password}).then(data=>{
+    btn.disabled=false;btn.textContent="Login →";
+    if(data.found){currentUser=data;loadDashboard();}
+    else{err.style.display="block";err.textContent="Invalid email or password.";}
+  }).catch(()=>{btn.disabled=false;btn.textContent="Login →";alert("Connection error.");});
 }
 
-// ---------------- REGISTER ----------------
+// REGISTER
 function doRegister(){
-  let valid = true;
+  let valid=true;
   ["regName","regIC","regBranch","regContact","regDepartment","regEmail","regPassword","regPasswordConfirm"].forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el.value.trim()){ el.classList.add("invalid-field"); valid=false; }
-    else el.classList.remove("invalid-field");
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.classList.add("invalid-field");valid=false;}else el.classList.remove("invalid-field");
   });
-  if(!valid){ document.getElementById("regError").style.display="block"; document.getElementById("regError").textContent="Please fill in all required fields."; return; }
-
-  const pw = document.getElementById("regPassword").value;
-  const pw2 = document.getElementById("regPasswordConfirm").value;
-  if(pw !== pw2){
-    document.getElementById("regPasswordConfirm").classList.add("invalid-field");
-    document.getElementById("regError").style.display="block";
-    document.getElementById("regError").textContent="Passwords do not match.";
-    return;
-  }
-  document.getElementById("regError").style.display="none";
-
-  const payload = {
-    action:"register",
-    ic: document.getElementById("regIC").value.trim(),
-    name: document.getElementById("regName").value.trim(),
-    branch: document.getElementById("regBranch").value,
-    contact: document.getElementById("regContact").value.trim(),
-    department: document.getElementById("regDepartment").value.trim(),
-    workEmail: document.getElementById("regEmail").value.trim(),
-    password: pw
-  };
-
-  const btn = document.getElementById("btnRegister");
-  btn.disabled = true; btn.textContent = "Registering...";
-
+  const err=document.getElementById("regError");
+  if(!valid){err.style.display="block";err.textContent="Please fill in all required fields.";return;}
+  const pw=document.getElementById("regPassword").value;
+  const pw2=document.getElementById("regPasswordConfirm").value;
+  if(pw!==pw2){document.getElementById("regPasswordConfirm").classList.add("invalid-field");err.style.display="block";err.textContent="Passwords do not match.";return;}
+  err.style.display="none";
+  const payload={action:"register",ic:document.getElementById("regIC").value.trim(),name:document.getElementById("regName").value.trim(),branch:document.getElementById("regBranch").value,contact:document.getElementById("regContact").value.trim(),department:document.getElementById("regDepartment").value.trim(),workEmail:document.getElementById("regEmail").value.trim(),password:pw};
+  const btn=document.getElementById("btnRegister");
+  btn.disabled=true;btn.textContent="Registering...";
   callAPI(payload).then(res=>{
-    btn.disabled = false; btn.textContent = "Register →";
-    if(res.success){
-      alert("Registration successful! Please login.");
-      show("stepLogin");
-    } else {
-      document.getElementById("regError").style.display="block";
-      document.getElementById("regError").textContent = res.error || "Registration failed.";
-    }
-  }).catch(()=>{
-    btn.disabled = false; btn.textContent = "Register →";
-    alert("Registration error. Please try again.");
-  });
+    btn.disabled=false;btn.textContent="Register →";
+    if(res.success){alert("Registration successful! Please login.");show("stepLogin");}
+    else{err.style.display="block";err.textContent=res.error||"Registration failed.";}
+  }).catch(()=>{btn.disabled=false;btn.textContent="Register →";alert("Error. Please try again.");});
 }
 
-// ---------------- DASHBOARD ----------------
+// DASHBOARD
 function loadDashboard(){
-  document.getElementById("dashName").textContent = currentUser.Name;
-  const isApprover = currentUser.approverBranches && currentUser.approverBranches.length>0;
-  document.getElementById("dashRole").textContent = isApprover ? "Approver — " + currentUser.approverBranches.join(", ") : currentUser.Branch;
-  // avatar now uses a fixed settings icon (no letter needed)
-
+  const isApprover=currentUser.approverBranches&&currentUser.approverBranches.length>0;
+  document.getElementById("dashName").textContent=currentUser.Name;
+  document.getElementById("dashRole").textContent=isApprover?"Approver — "+currentUser.approverBranches.join(", "):currentUser.Branch;
+  document.getElementById("approverBtns").classList.toggle("hidden",!isApprover);
   show("stepDashboard");
-
-  // load my requests
-  document.getElementById("myRequestsList").innerHTML = '<p class="loading-text">Loading...</p>';
-  callAPI({action:"getMyRequests", ic: currentUser.IC}).then(data=>{
-    renderRequestList(data.requests, "myRequestsList", false);
-  });
-
-  // load pending approvals if approver
-  const pendingCard = document.getElementById("pendingApprovalCard");
+  document.getElementById("myRequestsList").innerHTML='<p class="loading-text">Loading...</p>';
+  callAPI({action:"getMyRequests",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"myRequestsList",false));
+  const pc=document.getElementById("pendingApprovalCard");
   if(isApprover){
-    pendingCard.classList.remove("hidden");
-    document.getElementById("pendingApprovalList").innerHTML = '<p class="loading-text">Loading...</p>';
-    callAPI({action:"getPendingApprovals", ic: currentUser.IC}).then(data=>{
-      renderRequestList(data.requests, "pendingApprovalList", true);
-    });
-  } else {
-    pendingCard.classList.add("hidden");
-  }
+    pc.classList.remove("hidden");
+    document.getElementById("pendingApprovalList").innerHTML='<p class="loading-text">Loading...</p>';
+    callAPI({action:"getPendingApprovals",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"pendingApprovalList",true));
+  }else pc.classList.add("hidden");
 }
 
-function renderRequestList(requests, containerId, showApproveButtons){
-  const container = document.getElementById(containerId);
-  if(!requests || requests.length===0){
-    container.innerHTML = '<p class="empty-msg">No requests found.</p>';
-    return;
-  }
-  container.innerHTML = "";
+function renderRequestList(requests,containerId,showApproveButtons){
+  const container=document.getElementById(containerId);
+  if(!requests||requests.length===0){container.innerHTML='<p class="empty-msg">No requests found.</p>';return;}
+  container.innerHTML="";
   requests.slice().reverse().forEach(r=>{
-    const div = document.createElement("div");
-    div.className = "req-item";
-    let docHtml = r.DocLink ? `<br><a href="${r.DocLink}" target="_blank">View Attachment</a>` : "";
-    div.innerHTML = `
+    const div=document.createElement("div");
+    div.className="req-item";
+    div.onclick=()=>openDetail(r,showApproveButtons);
+    div.innerHTML=`
+      <div class="req-ref">Ref: ${r.RequestID||"-"}</div>
       <div class="req-item-top">
-        <span class="req-job">${r.JobNo}</span>
+        <span class="req-job">${r.JobNo||"-"}</span>
         <span class="status-pill status-${r.Status}">${r.Status}</span>
       </div>
-      <div class="req-detail">
-        Requester: ${r.RequesterName}<br>
-        Branch: ${r.Branch} | Type: ${r.Type}<br>
-        Date: ${r.Date} | Time: ${r.Time}<br>
-        Location: ${r.WorkLocation}<br>
-        Reason: ${r.Reason}${docHtml}
-      </div>
+      <div class="req-detail">${r.RequesterName} | ${r.Branch}<br>${r.Date} | ${r.Time}</div>
+      <div class="req-submitted">Submitted: ${fmtDate(r.Timestamp)}</div>
     `;
-    if(showApproveButtons && r.Status === "Pending"){
-      const btnWrap = document.createElement("div");
-      btnWrap.className = "approve-btns";
-      btnWrap.innerHTML = `
-        <button class="btn-approve" onclick="actOnRequest('${r.RequestID}','Approved')">Approve</button>
-        <button class="btn-reject" onclick="actOnRequest('${r.RequestID}','Rejected')">Reject</button>
-      `;
-      div.appendChild(btnWrap);
-    }
     container.appendChild(div);
   });
 }
 
-function actOnRequest(requestId, newStatus){
-  callAPI({action:"approveReject", requestId:requestId, newStatus:newStatus}).then(()=>{
+// PROFILE
+function openProfile(){
+  document.getElementById("pIC").value=currentUser.IC||"";
+  document.getElementById("pName").value=currentUser.Name||"";
+  document.getElementById("pBranch").value=currentUser.Branch||"";
+  document.getElementById("pContact").value=currentUser.Contact||"";
+  document.getElementById("pDepartment").value=currentUser.Department||"";
+  document.getElementById("pEmail").value=currentUser.WorkEmail||"";
+  show("stepProfile");
+}
+function saveProfile(){
+  currentUser.Name=document.getElementById("pName").value;
+  currentUser.Branch=document.getElementById("pBranch").value;
+  currentUser.Contact=document.getElementById("pContact").value;
+  currentUser.Department=document.getElementById("pDepartment").value;
+  currentUser.WorkEmail=document.getElementById("pEmail").value;
+  loadDashboard();
+}
+
+// DETAIL
+function openDetail(r,isApprover){
+  currentDetail=r;
+  const status=r.Status||"Pending";
+  const statusEmoji=status==="Approved"?"✅":status==="Rejected"?"❌":"⏳";
+  let bannerHtml=`<div class="status-banner status-banner-${status}">
+    <div class="status-banner-label">Reference Number</div>
+    <div class="status-banner-ref">${r.RequestID||"-"}</div>
+    <div class="status-banner-status">${statusEmoji} ${status}</div>
+    <div class="status-banner-meta">Submitted: ${fmtDate(r.Timestamp)}`;
+  if(status!=="Pending"&&r.ApprovedAt){
+    bannerHtml+=`<br>${status} by: ${r.ApprovedBy||"-"}<br>${status} on: ${fmtDate(r.ApprovedAt)}`;
+  }
+  bannerHtml+=`</div></div>`;
+  document.getElementById("detailStatusBanner").innerHTML=bannerHtml;
+  document.getElementById("dBranch").value=r.Branch||"";
+  document.getElementById("dJobNo").value=r.JobNo||"";
+  document.getElementById("dDate").value=r.Date||"";
+  document.getElementById("dTime").value=r.Time||"";
+  document.getElementById("dWorkLocation").value=r.WorkLocation||"";
+  document.getElementById("dReason").value=r.Reason||"";
+  const teamWrap=document.getElementById("dTeamWrap");
+  if(r.TeamMembers&&r.TeamMembers.trim()){teamWrap.classList.remove("hidden");document.getElementById("dTeamMembers").value=r.TeamMembers;}
+  else teamWrap.classList.add("hidden");
+  const docWrap=document.getElementById("dDocWrap");
+  if(r.DocLink&&r.DocLink.trim()){docWrap.classList.remove("hidden");document.getElementById("dDocLink").href=r.DocLink;}
+  else docWrap.classList.add("hidden");
+  document.getElementById("dApprover").value=r.ApproverIC||"";
+  const approveWrap=document.getElementById("detailApproveWrap");
+  if(isApprover&&status==="Pending") approveWrap.classList.remove("hidden");
+  else approveWrap.classList.add("hidden");
+  show("stepDetail");
+}
+
+function actOnDetail(newStatus){
+  if(!currentDetail) return;
+  callAPI({action:"approveReject",requestId:currentDetail.RequestID,newStatus,approverName:currentUser.Name}).then(()=>{
+    currentDetail.Status=newStatus;
+    currentDetail.ApprovedAt=new Date().toISOString();
+    currentDetail.ApprovedBy=currentUser.Name;
+    openDetail(currentDetail,false);
     loadDashboard();
   });
 }
 
-// ---------------- PROFILE ----------------
-function saveProfile(){
-  // profile edits not yet persisted to sheet in this version
-  currentUser.Name = document.getElementById("pName").value;
-  currentUser.Branch = document.getElementById("pBranch").value;
-  currentUser.Contact = document.getElementById("pContact").value;
-  currentUser.Department = document.getElementById("pDepartment").value;
-  currentUser.WorkEmail = document.getElementById("pEmail").value;
-  loadDashboard();
+function actOnRequest(requestId,newStatus){
+  callAPI({action:"approveReject",requestId,newStatus,approverName:currentUser.Name}).then(()=>loadDashboard());
 }
 
-document.getElementById("stepProfile").addEventListener("transitionend",()=>{});
-
-function fillProfileFields(){
-  document.getElementById("pIC").value = currentUser.IC;
-  document.getElementById("pName").value = currentUser.Name||"";
-  document.getElementById("pBranch").value = currentUser.Branch||"";
-  document.getElementById("pContact").value = currentUser.Contact||"";
-  document.getElementById("pDepartment").value = currentUser.Department||"";
-  document.getElementById("pEmail").value = currentUser.WorkEmail||"";
-}
-
-// hook into avatar click
-document.getElementById("avatarCircle").addEventListener("click", fillProfileFields);
-
-let teamMemberCount = 0;
-
+// TEAM
 function addTeamMemberRow(){
-  teamMemberCount++;
-  const list = document.getElementById("teamMembersList");
-  const row = document.createElement("div");
-  row.className = "team-row";
-  row.innerHTML = `
-    <span class="team-num">${list.children.length+1}.</span>
-    <input type="text" class="teamMemberInput" placeholder="Member name">
-    <button type="button" class="team-remove" onclick="removeTeamMemberRow(this)">×</button>
-  `;
+  const list=document.getElementById("teamMembersList");
+  const row=document.createElement("div");
+  row.className="team-row";
+  row.innerHTML=`<span class="team-num">${list.children.length+1}.</span><input type="text" class="teamMemberInput" placeholder="Member name"><button type="button" class="team-remove" onclick="removeTeamMemberRow(this)">×</button>`;
   list.appendChild(row);
 }
+function removeTeamMemberRow(btn){btn.parentElement.remove();renumberTeamRows();}
+function renumberTeamRows(){document.querySelectorAll("#teamMembersList .team-row").forEach((row,idx)=>row.querySelector(".team-num").textContent=(idx+1)+".");}
+function getTeamMembersList(){return Array.from(document.querySelectorAll(".teamMemberInput")).map(i=>i.value.trim()).filter(v=>v.length>0);}
 
-function removeTeamMemberRow(btn){
-  btn.parentElement.remove();
-  renumberTeamRows();
-}
-
-function renumberTeamRows(){
-  const rows = document.querySelectorAll("#teamMembersList .team-row");
-  rows.forEach((row, idx)=>{
-    row.querySelector(".team-num").textContent = (idx+1) + ".";
-  });
-}
-
-function getTeamMembersList(){
-  return Array.from(document.querySelectorAll(".teamMemberInput"))
-    .map(i=>i.value.trim())
-    .filter(v=>v.length>0);
-}
-
-// ---------------- NEW REQUEST FLOW ----------------
+// OT FORM
 function openNewRequest(){
-  document.querySelector('input[name="reqType"][value="Own"]').checked = true;
+  document.querySelector('input[name="reqType"][value="Own"]').checked=true;
   document.getElementById("lbl-type-own").classList.add("selected");
   document.getElementById("lbl-type-team").classList.remove("selected");
   document.getElementById("teamMembersWrap").classList.add("hidden");
-  document.getElementById("teamMembersList").innerHTML = "";
-  teamMemberCount = 0;
-  addTeamMemberRow();
-  addTeamMemberRow();
-  addTeamMemberRow();
+  document.getElementById("teamMembersList").innerHTML="";
+  teamMemberCount=0;
+  addTeamMemberRow();addTeamMemberRow();addTeamMemberRow();
   show("stepType");
 }
-
 function handleTypeRadio(){
-  const val = document.querySelector('input[name="reqType"]:checked').value;
-  document.getElementById("lbl-type-own").classList.toggle("selected", val==="Own");
-  document.getElementById("lbl-type-team").classList.toggle("selected", val==="Team");
-  document.getElementById("teamMembersWrap").classList.toggle("hidden", val!=="Team");
+  const val=document.querySelector('input[name="reqType"]:checked').value;
+  document.getElementById("lbl-type-own").classList.toggle("selected",val==="Own");
+  document.getElementById("lbl-type-team").classList.toggle("selected",val==="Team");
+  document.getElementById("teamMembersWrap").classList.toggle("hidden",val!=="Team");
 }
-
 function goToForm(){
-  const val = document.querySelector('input[name="reqType"]:checked').value;
-  if(val==="Team" && getTeamMembersList().length===0){
-    alert("Please add at least one team member.");
-    return;
-  }
-  // reset form fields
-  ["fBranch","fJobNo","fDate","fTimeFrom","fTimeTo","fWorkLocation","fReason"].forEach(id=>{
-    document.getElementById(id).value = "";
-    document.getElementById(id).classList.remove("invalid-field");
-  });
-  document.getElementById("fFile").value = "";
-  document.getElementById("otDurationText").textContent = "";
-  document.getElementById("fApprover").innerHTML = '<option value="">Select Branch First</option>';
-  pendingFileData = null;
+  const val=document.querySelector('input[name="reqType"]:checked').value;
+  if(val==="Team"&&getTeamMembersList().length===0){alert("Please add at least one team member.");return;}
+  ["fBranch","fJobNo","fDate","fTimeFrom","fTimeTo","fWorkLocation","fReason"].forEach(id=>{document.getElementById(id).value="";document.getElementById(id).classList.remove("invalid-field");});
+  document.getElementById("fFile").value="";
+  document.getElementById("otDurationText").textContent="";
+  document.getElementById("fApprover").innerHTML='<option value="">Select Branch First</option>';
   show("stepForm");
 }
-
 function loadApprovers(){
-  const branch = document.getElementById("fBranch").value;
-  const sel = document.getElementById("fApprover");
-  sel.innerHTML = '<option value="">Loading...</option>';
-  if(!branch) return;
-  callAPI({action:"getApprovers", branch:branch}).then(data=>{
-    sel.innerHTML = '<option value="">Select Approver</option>';
-    (data.approvers||[]).forEach(a=>{
-      const opt = document.createElement("option");
-      opt.value = a.ic;
-      opt.textContent = a.name;
-      sel.appendChild(opt);
-    });
-    if(!data.approvers || data.approvers.length===0){
-      sel.innerHTML = '<option value="">No approvers set for this branch</option>';
-    }
+  const branch=document.getElementById("fBranch").value;
+  const sel=document.getElementById("fApprover");
+  if(!branch){sel.innerHTML='<option value="">Select Branch First</option>';return;}
+  sel.innerHTML='<option value="">Loading...</option>';
+  callAPI({action:"getApprovers",branch}).then(data=>{
+    sel.innerHTML='<option value="">Select Approver</option>';
+    (data.approvers||[]).forEach(a=>{const opt=document.createElement("option");opt.value=a.ic;opt.textContent=a.name;sel.appendChild(opt);});
+    if(!data.approvers||data.approvers.length===0) sel.innerHTML='<option value="">No approvers for this branch</option>';
   });
 }
-
-function calcOTDuration(){
-  const label = getOTDurationLabel();
-  document.getElementById("otDurationText").textContent = label ? "OT Duration: " + label : "";
-}
-
+function calcOTDuration(){const l=getOTDurationLabel();document.getElementById("otDurationText").textContent=l?"OT Duration: "+l:"";}
 function getOTDurationLabel(){
-  const from = document.getElementById("fTimeFrom").value;
-  const to = document.getElementById("fTimeTo").value;
-  if(!from || !to) return "";
-
-  const [fh, fm] = from.split(":").map(Number);
-  const [th, tm] = to.split(":").map(Number);
-  let fromMins = fh*60 + fm;
-  let toMins = th*60 + tm;
-  let diff = toMins - fromMins;
-  if(diff < 0) diff += 24*60; // crosses midnight
-
-  const hours = Math.floor(diff/60);
-  const mins = diff % 60;
-  if(hours===0) return mins + "m";
-  if(mins===0) return hours + "h";
-  return hours + "h " + mins + "m";
+  const from=document.getElementById("fTimeFrom").value;
+  const to=document.getElementById("fTimeTo").value;
+  if(!from||!to) return "";
+  const [fh,fm]=from.split(":").map(Number);
+  const [th,tm]=to.split(":").map(Number);
+  let diff=(th*60+tm)-(fh*60+fm);
+  if(diff<0) diff+=1440;
+  const h=Math.floor(diff/60),m=diff%60;
+  return h===0?m+"m":m===0?h+"h":h+"h "+m+"m";
 }
-
-function readFileAsBase64(file){
-  return new Promise((resolve,reject)=>{
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
+function readFileAsBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
 function submitOTRequest(){
-  let valid = true;
+  let valid=true;
   ["fBranch","fJobNo","fDate","fTimeFrom","fTimeTo","fWorkLocation","fReason","fApprover"].forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el.value.trim()){ el.classList.add("invalid-field"); valid=false; }
-    else el.classList.remove("invalid-field");
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.classList.add("invalid-field");valid=false;}else el.classList.remove("invalid-field");
   });
-  if(!valid){
-    document.getElementById("formError").style.display="block";
-    document.querySelector(".invalid-field")?.scrollIntoView({behavior:"smooth",block:"center"});
-    return;
-  }
+  if(!valid){document.getElementById("formError").style.display="block";document.querySelector(".invalid-field")?.scrollIntoView({behavior:"smooth",block:"center"});return;}
   document.getElementById("formError").style.display="none";
-
-  const btn = document.getElementById("btnSubmitRequest");
-  btn.disabled = true; btn.textContent = "Submitting...";
-
-  const reqType = document.querySelector('input[name="reqType"]:checked').value;
-  const approverSelect = document.getElementById("fApprover");
-  const approverName = approverSelect.options[approverSelect.selectedIndex].textContent;
-
-  const basePayload = {
-    action: "submitRequest",
-    requesterIC: currentUser.IC,
-    requesterName: currentUser.Name,
-    type: reqType,
-    teamMembers: reqType==="Team" ? getTeamMembersList().join(", ") : "",
-    branch: document.getElementById("fBranch").value,
-    jobNo: document.getElementById("fJobNo").value.trim(),
-    date: document.getElementById("fDate").value,
-    timeFrom: document.getElementById("fTimeFrom").value,
-    timeTo: document.getElementById("fTimeTo").value,
-    time: document.getElementById("fTimeFrom").value + " - " + document.getElementById("fTimeTo").value + " (" + getOTDurationLabel() + ")",
-    workLocation: document.getElementById("fWorkLocation").value.trim(),
-    reason: document.getElementById("fReason").value.trim(),
-    approverIC: approverSelect.value
+  const btn=document.getElementById("btnSubmitRequest");
+  btn.disabled=true;btn.textContent="Submitting...";
+  const reqType=document.querySelector('input[name="reqType"]:checked').value;
+  const approverSelect=document.getElementById("fApprover");
+  const basePayload={
+    action:"submitRequest",requesterIC:currentUser.IC,requesterName:currentUser.Name,
+    type:reqType,teamMembers:reqType==="Team"?getTeamMembersList().join(", "):"",
+    branch:document.getElementById("fBranch").value,jobNo:document.getElementById("fJobNo").value.trim(),
+    date:document.getElementById("fDate").value,
+    time:document.getElementById("fTimeFrom").value+" - "+document.getElementById("fTimeTo").value+" ("+getOTDurationLabel()+")",
+    workLocation:document.getElementById("fWorkLocation").value.trim(),reason:document.getElementById("fReason").value.trim(),
+    approverIC:approverSelect.value
   };
+  const fileInput=document.getElementById("fFile");
+  const finish=payload=>callAPI(payload).then(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";show("stepSuccess");}).catch(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";alert("Submission error.");});
+  if(fileInput.files&&fileInput.files[0]){
+    const file=fileInput.files[0];
+    if(file.size>5*1024*1024){alert("File too large. Max 5MB.");btn.disabled=false;btn.textContent="Submit Request ✓";return;}
+    readFileAsBase64(file).then(base64=>{basePayload.fileBase64=base64;basePayload.fileName=file.name;basePayload.fileMimeType=file.type;finish(basePayload);});
+  }else finish(basePayload);
+}
+function backToDashboard(){loadDashboard();}
 
-  const fileInput = document.getElementById("fFile");
-  const finish = (payload) => {
-    callAPI(payload).then(()=>{
-      btn.disabled = false; btn.textContent = "Submit Request ✓";
-      show("stepSuccess");
+// ANALYSIS
+function loadAnalysis(){
+  document.getElementById("analysisName").textContent="Approver: "+currentUser.Name;
+  document.getElementById("statTotal").textContent="-";
+  document.getElementById("statPending").textContent="-";
+  document.getElementById("statApproved").textContent="-";
+  document.getElementById("statRejected").textContent="-";
+  document.getElementById("analysisByMonth").innerHTML='<p class="loading-text">Loading...</p>';
+  callAPI({action:"getPendingApprovals",ic:currentUser.IC}).then(pending=>{
+    callAPI({action:"getAllMyApprovals",ic:currentUser.IC}).then(all=>{
+      const allReqs=all.requests||[];
+      const pendingReqs=pending.requests||[];
+      const approved=allReqs.filter(r=>r.Status==="Approved");
+      const rejected=allReqs.filter(r=>r.Status==="Rejected");
+      const total=allReqs.length;
+      document.getElementById("statTotal").textContent=total;
+      document.getElementById("statPending").textContent=pendingReqs.length;
+      document.getElementById("statApproved").textContent=approved.length;
+      document.getElementById("statRejected").textContent=rejected.length;
+      // by month
+      const byMonth={};
+      allReqs.forEach(r=>{
+        const mk=monthKey(r.ApprovedAt||r.Timestamp);
+        if(!byMonth[mk]) byMonth[mk]={approved:0,rejected:0,pending:0};
+        if(r.Status==="Approved") byMonth[mk].approved++;
+        else if(r.Status==="Rejected") byMonth[mk].rejected++;
+        else byMonth[mk].pending++;
+      });
+      pendingReqs.forEach(r=>{
+        const mk=monthKey(r.Timestamp);
+        if(!byMonth[mk]) byMonth[mk]={approved:0,rejected:0,pending:0};
+        byMonth[mk].pending++;
+      });
+      const container=document.getElementById("analysisByMonth");
+      const keys=Object.keys(byMonth).sort().reverse();
+      if(keys.length===0){container.innerHTML='<p class="empty-msg">No records found.</p>';return;}
+      container.innerHTML="";
+      keys.forEach(k=>{
+        const sec=document.createElement("div");
+        sec.className="month-section";
+        const d=byMonth[k];
+        sec.innerHTML=`<div class="month-header">${monthLabel(k)}</div>
+          <div style="display:flex;gap:10px;font-size:14px">
+            <span style="color:#1d7a3a">✅ Approved: ${d.approved}</span>
+            <span style="color:#c0392b">❌ Rejected: ${d.rejected}</span>
+            <span style="color:#b8860b">⏳ Pending: ${d.pending}</span>
+          </div>`;
+        container.appendChild(sec);
+      });
     }).catch(()=>{
-      btn.disabled = false; btn.textContent = "Submit Request ✓";
-      alert("Submission error. Please try again.");
+      // fallback if getAllMyApprovals not yet in Apps Script
+      document.getElementById("analysisByMonth").innerHTML='<p class="empty-msg">Update Apps Script to enable full analysis.</p>';
     });
-  };
-
-  if(fileInput.files && fileInput.files[0]){
-    const file = fileInput.files[0];
-    if(file.size > 5*1024*1024){
-      alert("File too large. Max 5MB.");
-      btn.disabled = false; btn.textContent = "Submit Request ✓";
-      return;
-    }
-    readFileAsBase64(file).then(base64=>{
-      basePayload.fileBase64 = base64;
-      basePayload.fileName = file.name;
-      basePayload.fileMimeType = file.type;
-      finish(basePayload);
-    });
-  } else {
-    finish(basePayload);
-  }
+  });
 }
 
-function backToDashboard(){
-  loadDashboard();
+// MASTER RECORD
+function loadMaster(){
+  allMasterData=[];
+  const branches=currentUser.approverBranches||[];
+  document.getElementById("masterSubtitle").textContent="Branch: "+branches.join(", ")+" — Approved Records";
+  document.getElementById("masterPrintBranch").textContent="Branch: "+branches.join(", ");
+  document.getElementById("masterList").innerHTML='<p class="loading-text">Loading...</p>';
+  callAPI({action:"getMasterRecord",branches}).then(data=>{
+    allMasterData=data.requests||[];
+    buildMonthFilter(allMasterData);
+    filterMaster();
+  }).catch(()=>{document.getElementById("masterList").innerHTML='<p class="empty-msg">Error loading records.</p>';});
+}
+function buildMonthFilter(records){
+  const sel=document.getElementById("masterMonthFilter");
+  const months=[...new Set(records.map(r=>monthKey(r.Timestamp)).filter(Boolean))].sort().reverse();
+  sel.innerHTML='<option value="">All Months</option>';
+  months.forEach(m=>{const opt=document.createElement("option");opt.value=m;opt.textContent=monthLabel(m);sel.appendChild(opt);});
+}
+function filterMaster(){
+  const filter=document.getElementById("masterMonthFilter").value;
+  const filtered=filter?allMasterData.filter(r=>monthKey(r.Timestamp)===filter):allMasterData;
+  renderMaster(filtered);
+}
+function renderMaster(records){
+  const container=document.getElementById("masterList");
+  if(!records||records.length===0){container.innerHTML='<p class="empty-msg">No approved records found.</p>';return;}
+  container.innerHTML="";
+  records.forEach(r=>{
+    const div=document.createElement("div");
+    div.className="card master-item";
+    div.onclick=()=>openDetail(r,false);
+    div.innerHTML=`
+      <div class="master-item-row">
+        <span class="master-name">${r.RequesterName}</span>
+        <span class="status-pill status-${r.Status}">${r.Status}</span>
+      </div>
+      <div class="master-detail">
+        Ref: ${r.RequestID||"-"}<br>
+        Branch: ${r.Branch} | Job No: ${r.JobNo}<br>
+        Date: ${r.Date} | Time: ${r.Time}<br>
+        Submitted: ${fmtDate(r.Timestamp)}<br>
+        ${r.Status!=="Pending"&&r.ApprovedBy?r.Status+" by: "+r.ApprovedBy+" on "+fmtDate(r.ApprovedAt):""}
+      </div>`;
+    container.appendChild(div);
+  });
 }
 </script>
 </body>
