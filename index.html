@@ -16,7 +16,7 @@ h2{font-size:18px;color:#000;margin-bottom:5px}
 .section-tag{font-size:11px;color:#ff6200;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px}
 label{font-size:14px;color:#444;display:block;margin-bottom:5px;margin-top:14px}
 label span{color:#ff6200}
-input[type=text],input[type=tel],input[type=email],input[type=date],input[type=time],textarea,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;-webkit-appearance:none;appearance:none;background:#fff}
+input[type=text],input[type=tel],input[type=email],input[type=date],input[type=time],input[type=password],textarea,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;-webkit-appearance:none;appearance:none;background:#fff}
 input:focus,textarea:focus,select:focus{border-color:#ff6200;outline:none}
 input:disabled{background:#f0f0f0;color:#888}
 textarea{resize:none;height:70px}
@@ -65,35 +65,38 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 <body>
 
 <div class="header">
-  <strong style="color:#ff6200;font-size:18px">HYPERWAVE OT APPROVAL FORM</strong>
+  <strong style="color:#ff6200;font-size:18px">Hyperwave OT Approval Form</strong>
 </div>
 
 <div class="container">
 
-  <!-- STEP 1: IC Login -->
+  <!-- STEP 1: Login -->
   <div id="stepLogin">
     <div class="card">
       <h2>Login</h2>
-      <p class="subtitle">Enter your NRIC / Passport Number to continue.</p>
-      <label>NRIC / Passport No. <span>*</span></label>
-      <input type="text" id="icInput" placeholder="IC / Passport Number" maxlength="20">
-      <p class="error-msg" id="icError">Please enter your IC or Passport number.</p>
-      <button class="btn" id="btnLogin" onclick="doLogin()">Continue →</button>
+      <p class="subtitle">Enter your work email and password to continue.</p>
+      <label>Work Email <span>*</span></label>
+      <input type="email" id="loginEmail" placeholder="name@hyper-wave.com">
+      <label>Password <span>*</span></label>
+      <input type="password" id="loginPassword" placeholder="Password">
+      <p class="error-msg" id="icError">Invalid email or password. Please try again.</p>
+      <button class="btn" id="btnLogin" onclick="doLogin()">Login →</button>
+      <button class="btn-outline" onclick="show('stepRegister')">New User? Register Here</button>
     </div>
   </div>
 
   <!-- STEP 2: Register -->
   <div id="stepRegister" class="hidden">
     <div class="card">
-      <span class="back-link" onclick="show('stepLogin')">← Back</span>
+      <span class="back-link" onclick="show('stepLogin')">← Back to Login</span>
       <h2>New User Registration</h2>
-      <p class="subtitle">We couldn't find your IC. Please register below.</p>
+      <p class="subtitle">Please fill in your details to create an account.</p>
 
       <label>Full Name <span>*</span></label>
       <input type="text" id="regName" oninput="removeInvalid(this)">
 
-      <label>NRIC / Passport No.</label>
-      <input type="text" id="regIC" disabled>
+      <label>NRIC / Passport No. <span>*</span></label>
+      <input type="text" id="regIC" oninput="removeInvalid(this)">
 
       <label>Branch <span>*</span></label>
       <select id="regBranch" oninput="removeInvalid(this)">
@@ -116,8 +119,14 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
       <label>Work Email <span>*</span></label>
       <input type="email" id="regEmail" placeholder="name@hyper-wave.com" oninput="removeInvalid(this)">
 
+      <label>Password <span>*</span></label>
+      <input type="password" id="regPassword" placeholder="Create a password" oninput="removeInvalid(this)">
+
+      <label>Confirm Password <span>*</span></label>
+      <input type="password" id="regPasswordConfirm" placeholder="Repeat password" oninput="removeInvalid(this)">
+
       <p class="error-msg" id="regError">Please fill in all required fields.</p>
-      <button class="btn" id="btnRegister" onclick="doRegister()">Register & Continue →</button>
+      <button class="btn" id="btnRegister" onclick="doRegister()">Register →</button>
     </div>
   </div>
 
@@ -292,7 +301,7 @@ function cleanIC(v){ return v.replace(/[^a-zA-Z0-9]/g,"").toUpperCase(); }
 function callAPI(payload){
   return fetch(SCRIPT_URL,{
     method:"POST",
-    mode:"cors",
+    redirect:"follow",
     headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(payload)
   }).then(r=>r.json());
@@ -300,25 +309,29 @@ function callAPI(payload){
 
 // ---------------- LOGIN ----------------
 function doLogin(){
-  const raw = document.getElementById("icInput").value.trim();
-  if(!raw){ document.getElementById("icError").style.display="block"; return; }
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+  if(!email || !password){
+    document.getElementById("icError").style.display="block";
+    document.getElementById("icError").textContent="Please enter your email and password.";
+    return;
+  }
   document.getElementById("icError").style.display="none";
-  const ic = cleanIC(raw);
 
   const btn = document.getElementById("btnLogin");
-  btn.disabled = true; btn.textContent = "Checking...";
+  btn.disabled = true; btn.textContent = "Logging in...";
 
-  callAPI({action:"checkIC", ic:ic}).then(data=>{
-    btn.disabled = false; btn.textContent = "Continue →";
+  callAPI({action:"checkLogin", email:email, password:password}).then(data=>{
+    btn.disabled = false; btn.textContent = "Login →";
     if(data.found){
       currentUser = data;
       loadDashboard();
     } else {
-      document.getElementById("regIC").value = ic;
-      show("stepRegister");
+      document.getElementById("icError").style.display="block";
+      document.getElementById("icError").textContent="Invalid email or password. Please try again.";
     }
   }).catch(()=>{
-    btn.disabled = false; btn.textContent = "Continue →";
+    btn.disabled = false; btn.textContent = "Login →";
     alert("Connection error. Please try again.");
   });
 }
@@ -326,35 +339,48 @@ function doLogin(){
 // ---------------- REGISTER ----------------
 function doRegister(){
   let valid = true;
-  ["regName","regBranch","regContact","regDepartment","regEmail"].forEach(id=>{
+  ["regName","regIC","regBranch","regContact","regDepartment","regEmail","regPassword","regPasswordConfirm"].forEach(id=>{
     const el = document.getElementById(id);
     if(!el.value.trim()){ el.classList.add("invalid-field"); valid=false; }
     else el.classList.remove("invalid-field");
   });
-  if(!valid){ document.getElementById("regError").style.display="block"; return; }
+  if(!valid){ document.getElementById("regError").style.display="block"; document.getElementById("regError").textContent="Please fill in all required fields."; return; }
+
+  const pw = document.getElementById("regPassword").value;
+  const pw2 = document.getElementById("regPasswordConfirm").value;
+  if(pw !== pw2){
+    document.getElementById("regPasswordConfirm").classList.add("invalid-field");
+    document.getElementById("regError").style.display="block";
+    document.getElementById("regError").textContent="Passwords do not match.";
+    return;
+  }
   document.getElementById("regError").style.display="none";
 
   const payload = {
     action:"register",
-    ic: document.getElementById("regIC").value,
+    ic: document.getElementById("regIC").value.trim(),
     name: document.getElementById("regName").value.trim(),
     branch: document.getElementById("regBranch").value,
     contact: document.getElementById("regContact").value.trim(),
     department: document.getElementById("regDepartment").value.trim(),
-    workEmail: document.getElementById("regEmail").value.trim()
+    workEmail: document.getElementById("regEmail").value.trim(),
+    password: pw
   };
 
   const btn = document.getElementById("btnRegister");
   btn.disabled = true; btn.textContent = "Registering...";
 
-  callAPI(payload).then(()=>{
-    return callAPI({action:"checkIC", ic: payload.ic});
-  }).then(data=>{
-    btn.disabled = false; btn.textContent = "Register & Continue →";
-    currentUser = data;
-    loadDashboard();
+  callAPI(payload).then(res=>{
+    btn.disabled = false; btn.textContent = "Register →";
+    if(res.success){
+      alert("Registration successful! Please login.");
+      show("stepLogin");
+    } else {
+      document.getElementById("regError").style.display="block";
+      document.getElementById("regError").textContent = res.error || "Registration failed.";
+    }
   }).catch(()=>{
-    btn.disabled = false; btn.textContent = "Register & Continue →";
+    btn.disabled = false; btn.textContent = "Register →";
     alert("Registration error. Please try again.");
   });
 }
