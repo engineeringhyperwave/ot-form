@@ -26,7 +26,9 @@ textarea{resize:none;height:70px}
 .btn:disabled{background:#ccc;cursor:not-allowed}
 .btn-outline{width:100%;padding:13px;background:#fff;color:#ff6200;border:1.5px solid #ff6200;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
 .btn-dark{width:100%;padding:13px;background:#333;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
-.btn-secondary{width:100%;padding:13px;background:#666;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
+.btn-blue{width:100%;padding:13px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
+.btn-blue:active{background:#1558b0}
+.btn-blue:disabled{background:#ccc;cursor:not-allowed}
 .hidden{display:none}
 .error-msg{color:#dc3545;font-size:14px;margin-top:12px;display:none;font-weight:bold;background:#fff5f5;padding:10px;border-radius:6px;border:1px solid #ffcccc}
 .success-msg{color:#1d7a3a;font-size:14px;margin-top:10px;display:none;font-weight:bold;background:#f0fff4;padding:10px;border-radius:6px;border:1px solid #a5d6a7}
@@ -66,15 +68,15 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .success-wrap h2{color:#28a745;font-size:22px;margin-bottom:10px}
 .success-wrap p{color:#666;font-size:15px;line-height:1.6}
 .loading-text{text-align:center;color:#999;font-size:14px;padding:10px}
-.invoice-banner{border-radius:8px;padding:16px;margin-bottom:15px;border:1.5px solid #ddd;background:#fafafa}
+.invoice-banner{border-radius:8px;padding:12px;margin-bottom:15px;border:1.5px solid #ddd;background:#fafafa}
 .invoice-banner.status-Approved{background:#f0fff4;border-color:#81c784}
 .invoice-banner.status-Rejected{background:#fff5f5;border-color:#e57373}
 .invoice-banner.status-Pending{background:#fffde7;border-color:#f0c040}
-.invoice-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;font-size:14px}
-.invoice-label{color:#888;font-size:12px;min-width:110px;flex-shrink:0}
-.invoice-value{color:#333;font-weight:500;text-align:right;flex:1}
-.invoice-status{font-size:20px;font-weight:bold;margin:8px 0;color:#333}
-.invoice-ref{font-size:12px;color:#888;margin-bottom:4px}
+.invoice-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;font-size:13px}
+.invoice-label{color:#888;font-size:12px;min-width:100px;flex-shrink:0}
+.invoice-value{color:#333;font-weight:500;text-align:right;flex:1;font-size:13px}
+.invoice-status{font-size:16px;font-weight:bold;margin:5px 0;color:#333}
+.invoice-ref{font-size:11px;color:#888;margin-bottom:2px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
 .stat-card{background:#fff;border-radius:10px;padding:15px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .stat-num{font-size:32px;font-weight:bold;margin-bottom:4px}
@@ -107,7 +109,7 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 </head>
 <body>
 <div class="header">
-  <strong style="color:#ff6200;font-size:18px">Hyperwave OT Approval Form</strong>
+  <strong style="color:#ff6200;font-size:18px;letter-spacing:0.03em">HYPERWAVE OT APPROVAL FORM</strong>
 </div>
 <div class="container">
 
@@ -216,7 +218,7 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <label>Work Email <span>*</span></label>
     <input type="email" id="pEmail">
     <hr>
-    <div class="section-tag">Change Password</div>
+    <div class="section-tag">Update Password</div>
     <label>Current Password <span>*</span></label>
     <input type="password" id="cpCurrent" placeholder="Current password" oninput="removeInvalid(this)">
     <label>New Password <span>*</span></label>
@@ -225,7 +227,7 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <input type="password" id="cpConfirm" placeholder="Repeat new password" oninput="removeInvalid(this)">
     <p class="error-msg" id="cpError">Please fill in all fields.</p>
     <p class="success-msg" id="cpSuccess">✅ Password changed successfully.</p>
-    <button class="btn-secondary" id="btnChangePass" onclick="changePassword()">Change Password</button>
+    <button class="btn-blue" id="btnChangePass" onclick="changePassword()">Update Password</button>
     <button class="btn" style="margin-top:10px" onclick="saveProfile()">Save Profile Changes</button>
   </div>
 </div>
@@ -329,7 +331,10 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
         <button class="btn-reject" onclick="actOnDetail('Rejected')">✗ Reject</button>
       </div>
     </div>
-    <button class="btn-dark" onclick="downloadInvoice()" style="margin-top:15px">⬇ Download as Image</button>
+    <div style="display:flex;gap:10px;margin-top:15px">
+      <button class="btn-outline" style="margin-top:0" onclick="previewInvoice()">👁 Preview</button>
+      <button class="btn-dark" style="margin-top:0;flex:1" onclick="downloadInvoice()">⬇ Download</button>
+    </div>
   </div>
 </div>
 
@@ -517,8 +522,8 @@ function changePassword(){
   callAPI({action:"changePassword",email:currentUser.WorkEmail,currentPassword:current,newPassword:newPw}).then(res=>{
     btn.disabled=false;btn.textContent="Change Password";
     if(res.success){suc.style.display="block";document.getElementById("cpCurrent").value="";document.getElementById("cpNew").value="";document.getElementById("cpConfirm").value="";}
-    else{err.style.display="block";err.textContent=res.error||"Failed to change password.";}
-  }).catch(()=>{btn.disabled=false;btn.textContent="Change Password";alert("Error.");});
+    else{err.style.display="block";err.textContent=res.error||"Failed to update password.";}
+  }).catch(()=>{btn.disabled=false;btn.textContent="Update Password";alert("Error.");});
 }
 
 // DETAIL
@@ -565,64 +570,67 @@ function actOnDetail(newStatus){
   });
 }
 
-// DOWNLOAD AS IMAGE
-function downloadInvoice(){
-  if(!currentDetail) return;
-  const r=currentDetail;
+function buildInvoiceHTML(r){
   const status=r.Status||"Pending";
   const emoji=status==="Approved"?"✅":status==="Rejected"?"❌":"⏳";
-  const area=document.getElementById("invoicePrintArea");
-
   let teamHtml="";
-  if(r.TeamMembers&&r.TeamMembers.trim()){
-    teamHtml=`<div class="inv-section">Team Members</div><div class="inv-row"><span class="inv-row-label">${r.TeamMembers.replace(/,\s*/g,"<br>")}</span></div>`;
-  }
+  if(r.TeamMembers&&r.TeamMembers.trim())
+    teamHtml=`<div class="inv-section">Team Members</div><div style="font-size:13px;color:#333;line-height:1.7">${r.TeamMembers.split(",").map(s=>s.trim()).join("<br>")}</div>`;
   let docHtml="";
-  if(r.DocLink&&r.DocLink.trim()){
-    docHtml=`<div class="inv-section">Supporting Document</div><div class="inv-row"><span class="inv-row-label" style="color:#ff6200">${r.DocLink}</span></div>`;
-  }
+  if(r.DocLink&&r.DocLink.trim())
+    docHtml=`<div class="inv-section">Supporting Document</div><div style="font-size:12px;word-break:break-all;color:#ff6200">${r.DocLink}</div>`;
   let approvedHtml="";
-  if(status!=="Pending"&&r.ApprovedAt){
+  if(status!=="Pending"&&r.ApprovedAt)
     approvedHtml=`<div class="inv-row"><span class="inv-row-label">${status} By</span><span class="inv-row-val">${r.ApprovedBy||"-"}</span></div>
     <div class="inv-row"><span class="inv-row-label">${status} On</span><span class="inv-row-val">${safeDate(r.ApprovedAt)}</span></div>`;
-  }
+  return `<div style="background:#fff;padding:24px;font-family:Arial,sans-serif;font-size:14px;color:#333;width:480px">
+    <div class="inv-header"><h1>Hyperwave Systems Engineering Sdn Bhd</h1><p>OT Approval Form</p></div>
+    <div class="inv-banner status-${status}">
+      <div class="inv-ref">Reference No: ${r.RequestID||"-"}</div>
+      <div class="inv-status">${emoji} ${status}</div>
+      <div class="inv-row"><span class="inv-row-label">Applicant</span><span class="inv-row-val">${r.RequesterName||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Branch</span><span class="inv-row-val">${r.Branch||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Submitted</span><span class="inv-row-val">${safeDate(r.Timestamp)}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Submitted To</span><span class="inv-row-val">${r.ApproverName||r.ApproverIC||"-"}</span></div>
+      ${approvedHtml}
+    </div>
+    <div class="inv-section">OT Details</div>
+    <div class="inv-row"><span class="inv-row-label">Job No.</span><span class="inv-row-val">${r.JobNo||"-"}</span></div>
+    <div class="inv-row"><span class="inv-row-label">Date</span><span class="inv-row-val">${r.Date||"-"}</span></div>
+    <div class="inv-row"><span class="inv-row-label">OT Time</span><span class="inv-row-val">${r.Time||"-"}</span></div>
+    <div class="inv-row"><span class="inv-row-label">Work Location</span><span class="inv-row-val">${r.WorkLocation||"-"}</span></div>
+    <div class="inv-row"><span class="inv-row-label">Reason</span><span class="inv-row-val">${r.Reason||"-"}</span></div>
+    ${teamHtml}${docHtml}
+    <div class="inv-footer">Generated by Hyperwave OT Approval System</div>
+  </div>`;
+}
 
-  area.innerHTML=`
-    <div id="invoiceContent" style="background:#fff;padding:24px;font-family:Arial,sans-serif;font-size:14px;color:#333;width:480px">
-      <div class="inv-header">
-        <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
-        <p>OT Approval Form</p>
-      </div>
-      <div class="inv-banner status-${status}">
-        <div class="inv-ref">Reference No: ${r.RequestID||"-"}</div>
-        <div class="inv-status">${emoji} ${status}</div>
-        <div class="inv-row"><span class="inv-row-label">Applicant</span><span class="inv-row-val">${r.RequesterName||"-"}</span></div>
-        <div class="inv-row"><span class="inv-row-label">Branch</span><span class="inv-row-val">${r.Branch||"-"}</span></div>
-        <div class="inv-row"><span class="inv-row-label">Submitted</span><span class="inv-row-val">${safeDate(r.Timestamp)}</span></div>
-        <div class="inv-row"><span class="inv-row-label">Submitted To</span><span class="inv-row-val">${r.ApproverName||r.ApproverIC||"-"}</span></div>
-        ${approvedHtml}
-      </div>
-      <div class="inv-section">OT Details</div>
-      <div class="inv-row"><span class="inv-row-label">Job No.</span><span class="inv-row-val">${r.JobNo||"-"}</span></div>
-      <div class="inv-row"><span class="inv-row-label">Date</span><span class="inv-row-val">${r.Date||"-"}</span></div>
-      <div class="inv-row"><span class="inv-row-label">OT Time</span><span class="inv-row-val">${r.Time||"-"}</span></div>
-      <div class="inv-row"><span class="inv-row-label">Work Location</span><span class="inv-row-val">${r.WorkLocation||"-"}</span></div>
-      <div class="inv-row"><span class="inv-row-label">Reason</span><span class="inv-row-val">${r.Reason||"-"}</span></div>
-      ${teamHtml}${docHtml}
-      <div class="inv-footer">Generated by Hyperwave OT Approval System</div>
-    </div>`;
-
-  const btn=document.querySelector('.btn-dark');
-  btn.disabled=true;btn.textContent="Generating...";
-
+function previewInvoice(){
+  if(!currentDetail) return;
+  const area=document.getElementById("invoicePrintArea");
+  area.innerHTML=buildInvoiceHTML(currentDetail);
   setTimeout(()=>{
-    html2canvas(document.getElementById("invoiceContent"),{scale:2,backgroundColor:"#fff",useCORS:true}).then(canvas=>{
+    html2canvas(document.getElementById("invoicePrintArea").firstElementChild,{scale:2,backgroundColor:"#fff",useCORS:true}).then(canvas=>{
+      const win=window.open();
+      win.document.write('<img src="'+canvas.toDataURL("image/png")+'" style="max-width:100%">');
+      win.document.close();
+    }).catch(()=>alert("Preview failed. Please try again."));
+  },100);
+}
+
+function downloadInvoice(){
+  if(!currentDetail) return;
+  const area=document.getElementById("invoicePrintArea");
+  area.innerHTML=buildInvoiceHTML(currentDetail);
+  const btns=document.querySelectorAll('.btn-dark,.btn-outline');
+  btns.forEach(b=>b.disabled=true);
+  setTimeout(()=>{
+    html2canvas(document.getElementById("invoicePrintArea").firstElementChild,{scale:2,backgroundColor:"#fff",useCORS:true}).then(canvas=>{
       const link=document.createElement("a");
-      link.download="OT_"+( r.RequestID||"record")+".png";
-      link.href=canvas.toDataURL("image/png");
-      link.click();
-      btn.disabled=false;btn.textContent="⬇ Download as Image";
-    }).catch(()=>{btn.disabled=false;btn.textContent="⬇ Download as Image";alert("Download failed. Please try again.");});
+      link.download="OT_"+(currentDetail.RequestID||"record")+".png";
+      link.href=canvas.toDataURL("image/png");link.click();
+      btns.forEach(b=>b.disabled=false);
+    }).catch(()=>{btns.forEach(b=>b.disabled=false);alert("Download failed. Please try again.");});
   },100);
 }
 
