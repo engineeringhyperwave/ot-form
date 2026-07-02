@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>OT Approval - Hyperwave Systems Engineering</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f5f5;color:#333;font-size:16px}
@@ -24,9 +25,11 @@ textarea{resize:none;height:70px}
 .btn:active{background:#ea5a00}
 .btn:disabled{background:#ccc;cursor:not-allowed}
 .btn-outline{width:100%;padding:13px;background:#fff;color:#ff6200;border:1.5px solid #ff6200;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
-.btn-print{width:100%;padding:13px;background:#fff;color:#333;border:1.5px solid #ccc;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
+.btn-dark{width:100%;padding:13px;background:#333;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
+.btn-secondary{width:100%;padding:13px;background:#666;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;margin-top:10px;font-weight:bold}
 .hidden{display:none}
 .error-msg{color:#dc3545;font-size:14px;margin-top:12px;display:none;font-weight:bold;background:#fff5f5;padding:10px;border-radius:6px;border:1px solid #ffcccc}
+.success-msg{color:#1d7a3a;font-size:14px;margin-top:10px;display:none;font-weight:bold;background:#f0fff4;padding:10px;border-radius:6px;border:1px solid #a5d6a7}
 .radio-group{display:flex;gap:10px;margin-top:8px}
 .radio-label{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer;padding:10px 15px;border:1.5px solid #ddd;border-radius:8px;flex:1;justify-content:center}
 .radio-label input{width:18px;height:18px;accent-color:#ff6200}
@@ -36,7 +39,7 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .dash-name{font-size:17px;font-weight:bold}
 .dash-role{font-size:12px;color:#999}
-.req-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;transition:box-shadow 0.15s}
+.req-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;transition:box-shadow 0.15s;background:#fff}
 .req-item:active{box-shadow:0 2px 8px rgba(255,98,0,0.15)}
 .req-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .req-job{font-weight:bold;font-size:15px}
@@ -51,9 +54,9 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .approve-btns{display:flex;gap:8px;margin-top:10px}
 .btn-approve{flex:1;background:#e8f5e9;color:#2e7d32;border:1.5px solid #a5d6a7;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:14px}
 .btn-reject{flex:1;background:#fce4e4;color:#c62828;border:1.5px solid #ef9a9a;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:14px}
-.team-row{display:flex;align-items:center;gap:8px;margin-top:8px}
-.team-num{font-size:14px;color:#666;min-width:18px}
-.team-row input{flex:1;margin-bottom:0}
+.team-row{display:flex;align-items:center;gap:6px;margin-top:8px}
+.team-num{font-size:14px;color:#666;min-width:18px;flex-shrink:0}
+.team-row input{flex:1;margin-bottom:0;font-size:14px;padding:10px}
 .team-remove{background:#fde0e0;color:#c0392b;border:none;width:32px;height:32px;border-radius:6px;font-size:16px;font-weight:bold;cursor:pointer;flex-shrink:0}
 .file-input-wrap{margin-top:14px}
 .file-input-wrap input[type=file]{width:100%;padding:10px;border:1.5px dashed #ddd;border-radius:8px;font-size:13px}
@@ -63,14 +66,15 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .success-wrap h2{color:#28a745;font-size:22px;margin-bottom:10px}
 .success-wrap p{color:#666;font-size:15px;line-height:1.6}
 .loading-text{text-align:center;color:#999;font-size:14px;padding:10px}
-.status-banner{border-radius:8px;padding:14px;margin-bottom:15px}
-.status-banner-Pending{background:#fff4d6;border:1.5px solid #f0c040}
-.status-banner-Approved{background:#d6f5dd;border:1.5px solid #81c784}
-.status-banner-Rejected{background:#fde0e0;border:1.5px solid #e57373}
-.status-banner-label{font-size:12px;color:#888;text-transform:uppercase;margin-bottom:4px}
-.status-banner-ref{font-size:13px;color:#555;margin-bottom:2px}
-.status-banner-status{font-size:18px;font-weight:bold;margin-bottom:6px}
-.status-banner-meta{font-size:12px;color:#666;line-height:1.7}
+.invoice-banner{border-radius:8px;padding:16px;margin-bottom:15px;border:1.5px solid #ddd;background:#fafafa}
+.invoice-banner.status-Approved{background:#f0fff4;border-color:#81c784}
+.invoice-banner.status-Rejected{background:#fff5f5;border-color:#e57373}
+.invoice-banner.status-Pending{background:#fffde7;border-color:#f0c040}
+.invoice-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;font-size:14px}
+.invoice-label{color:#888;font-size:12px;min-width:110px;flex-shrink:0}
+.invoice-value{color:#333;font-weight:500;text-align:right;flex:1}
+.invoice-status{font-size:20px;font-weight:bold;margin:8px 0;color:#333}
+.invoice-ref{font-size:12px;color:#888;margin-bottom:4px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
 .stat-card{background:#fff;border-radius:10px;padding:15px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .stat-num{font-size:32px;font-weight:bold;margin-bottom:4px}
@@ -79,30 +83,32 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 .stat-Rejected .stat-num{color:#c0392b}
 .stat-Pending .stat-num{color:#b8860b}
 .stat-Total .stat-num{color:#ff6200}
-.month-section{margin-bottom:12px}
-.month-header{font-size:13px;font-weight:bold;color:#555;padding:8px 0;border-bottom:1px solid #eee;margin-bottom:8px}
-.master-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer}
+.master-item{border:1px solid #eee;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;background:#fff}
 .master-item-row{display:flex;justify-content:space-between;align-items:center}
 .master-name{font-weight:bold;font-size:14px}
 .master-detail{font-size:12px;color:#666;margin-top:4px;line-height:1.6}
-@media print{
-  .header,.back-link,.btn,.btn-outline,.btn-print,.approve-btns,.no-print{display:none!important}
-  body{background:#fff}
-  .container{padding:0;max-width:100%}
-  .card{box-shadow:none;border:1px solid #ddd;margin-bottom:10px}
-  .print-header{display:block!important}
-}
-.print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #ff6200}
-.print-header h1{font-size:20px;color:#ff6200}
-.print-header p{font-size:12px;color:#666}
+/* Invoice print area */
+#invoicePrintArea{background:#fff;padding:24px;font-family:Arial,sans-serif;font-size:14px;color:#333;max-width:500px}
+#invoicePrintArea .inv-header{text-align:center;border-bottom:2px solid #ff6200;padding-bottom:14px;margin-bottom:16px}
+#invoicePrintArea .inv-header h1{font-size:17px;color:#ff6200;margin-bottom:4px}
+#invoicePrintArea .inv-header p{font-size:12px;color:#666}
+#invoicePrintArea .inv-banner{border-radius:6px;padding:12px;margin-bottom:14px}
+#invoicePrintArea .inv-banner.status-Approved{background:#f0fff4;border:1px solid #81c784}
+#invoicePrintArea .inv-banner.status-Rejected{background:#fff5f5;border:1px solid #e57373}
+#invoicePrintArea .inv-banner.status-Pending{background:#fffde7;border:1px solid #f0c040}
+#invoicePrintArea .inv-ref{font-size:11px;color:#888;margin-bottom:2px}
+#invoicePrintArea .inv-status{font-size:18px;font-weight:bold;margin-bottom:8px}
+#invoicePrintArea .inv-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;border-bottom:1px solid #f0f0f0;padding-bottom:5px}
+#invoicePrintArea .inv-row-label{color:#888;min-width:120px}
+#invoicePrintArea .inv-row-val{color:#333;font-weight:500;text-align:right}
+#invoicePrintArea .inv-section{font-size:11px;color:#ff6200;font-weight:bold;text-transform:uppercase;margin:12px 0 6px}
+#invoicePrintArea .inv-footer{margin-top:16px;font-size:11px;color:#aaa;text-align:center}
 </style>
 </head>
 <body>
-
 <div class="header">
   <strong style="color:#ff6200;font-size:18px">Hyperwave OT Approval Form</strong>
 </div>
-
 <div class="container">
 
 <!-- LOGIN -->
@@ -134,10 +140,9 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
       <option value="">Select Branch</option>
       <option>Puchong,Selangor</option>
       <option>Kota Kinabalu,Sabah</option>
-      <option>Tamparuli,Sabah</option>
       <option>Bintulu,Sarawak</option>
       <option>Paka,Terengganu</option>
-      <option>Kota Tinggi,Johor</option>
+      <option>Pengerang,Johor</option>
       <option>Melaka</option>
     </select>
     <label>Contact No. <span>*</span></label>
@@ -176,12 +181,10 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
       <button class="btn-outline" style="margin-top:10px" onclick="show('stepMaster');loadMaster()">📋 Master Record</button>
     </div>
   </div>
-
   <div class="card hidden" id="pendingApprovalCard">
     <div class="section-tag">Pending My Approval</div>
     <div id="pendingApprovalList"></div>
   </div>
-
   <div class="card">
     <div class="section-tag">My OT Requests</div>
     <div id="myRequestsList"><p class="loading-text">Loading...</p></div>
@@ -201,10 +204,9 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <select id="pBranch">
       <option>Puchong,Selangor</option>
       <option>Kota Kinabalu,Sabah</option>
-      <option>Tamparuli,Sabah</option>
       <option>Bintulu,Sarawak</option>
       <option>Paka,Terengganu</option>
-      <option>Kota Tinggi,Johor</option>
+      <option>Pengerang,Johor</option>
       <option>Melaka</option>
     </select>
     <label>Contact No. <span>*</span></label>
@@ -213,10 +215,8 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <input type="text" id="pDepartment">
     <label>Work Email <span>*</span></label>
     <input type="email" id="pEmail">
-    <button class="btn" onclick="saveProfile()">Save Changes</button>
-  </div>
-  <div class="card">
-    <h2>Change Password</h2>
+    <hr>
+    <div class="section-tag">Change Password</div>
     <label>Current Password <span>*</span></label>
     <input type="password" id="cpCurrent" placeholder="Current password" oninput="removeInvalid(this)">
     <label>New Password <span>*</span></label>
@@ -224,8 +224,9 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <label>Confirm New Password <span>*</span></label>
     <input type="password" id="cpConfirm" placeholder="Repeat new password" oninput="removeInvalid(this)">
     <p class="error-msg" id="cpError">Please fill in all fields.</p>
-    <p id="cpSuccess" style="color:#1d7a3a;font-size:14px;margin-top:10px;display:none;font-weight:bold">✅ Password changed successfully.</p>
-    <button class="btn" id="btnChangePass" onclick="changePassword()">Change Password</button>
+    <p class="success-msg" id="cpSuccess">✅ Password changed successfully.</p>
+    <button class="btn-secondary" id="btnChangePass" onclick="changePassword()">Change Password</button>
+    <button class="btn" style="margin-top:10px" onclick="saveProfile()">Save Profile Changes</button>
   </div>
 </div>
 
@@ -240,7 +241,12 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
       <label class="radio-label" id="lbl-type-team"><input type="radio" name="reqType" value="Team" onchange="handleTypeRadio()"> Team</label>
     </div>
     <div id="teamMembersWrap" class="hidden">
-      <label style="margin-top:16px">List of Team Members <span>*</span></label>
+      <label style="margin-top:16px">Team Members (Name + Designation) <span>*</span></label>
+      <div style="display:flex;gap:6px;margin-top:6px;margin-bottom:4px">
+        <div style="flex:1;font-size:11px;color:#aaa;padding-left:24px">Name</div>
+        <div style="flex:1;font-size:11px;color:#aaa">Designation</div>
+        <div style="width:32px"></div>
+      </div>
       <div id="teamMembersList"></div>
       <button type="button" class="btn-outline" onclick="addTeamMemberRow()">+ Add Member</button>
     </div>
@@ -258,10 +264,9 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
       <option value="">Select Branch</option>
       <option>Puchong,Selangor</option>
       <option>Kota Kinabalu,Sabah</option>
-      <option>Tamparuli,Sabah</option>
       <option>Bintulu,Sarawak</option>
       <option>Paka,Terengganu</option>
-      <option>Kota Tinggi,Johor</option>
+      <option>Pengerang,Johor</option>
       <option>Melaka</option>
     </select>
     <label>Job No. <span>*</span></label>
@@ -292,18 +297,12 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
   </div>
 </div>
 
-<!-- DETAIL PAGE -->
+<!-- DETAIL -->
 <div id="stepDetail" class="hidden">
-  <div class="print-header">
-    <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
-    <p>OT Approval Form</p>
-  </div>
-  <div class="card no-print">
-    <span class="back-link" onclick="show('stepDashboard')">← Back</span>
-  </div>
   <div class="card">
+    <span class="back-link" id="detailBackLink" onclick="show('stepDashboard')">← Back</span>
     <div id="detailStatusBanner"></div>
-    <div class="section-tag">OT Approval Form</div>
+    <div class="section-tag" style="margin-top:10px">OT Details</div>
     <label>Branch</label>
     <input type="text" id="dBranch" disabled>
     <label>Job No.</label>
@@ -318,21 +317,19 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <textarea id="dReason" disabled></textarea>
     <div id="dTeamWrap" class="hidden">
       <label>Team Members</label>
-      <textarea id="dTeamMembers" disabled></textarea>
+      <textarea id="dTeamMembers" disabled style="height:90px"></textarea>
     </div>
     <div id="dDocWrap" class="hidden" style="margin-top:14px">
       <label>Supporting Document</label>
       <a id="dDocLink" href="#" target="_blank" style="display:block;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;color:#ff6200">📎 View Attachment</a>
     </div>
-    <label>Submitted To (Approver)</label>
-    <input type="text" id="dApprover" disabled>
-    <div id="detailApproveWrap" class="hidden no-print">
+    <div id="detailApproveWrap" class="hidden">
       <div class="approve-btns" style="margin-top:16px">
-        <button class="btn-approve" id="dBtnApprove" onclick="actOnDetail('Approved')">✓ Approve</button>
-        <button class="btn-reject" id="dBtnReject" onclick="actOnDetail('Rejected')">✗ Reject</button>
+        <button class="btn-approve" onclick="actOnDetail('Approved')">✓ Approve</button>
+        <button class="btn-reject" onclick="actOnDetail('Rejected')">✗ Reject</button>
       </div>
     </div>
-    <button class="btn-print no-print" onclick="window.print()" style="margin-top:15px">🖨️ Print</button>
+    <button class="btn-dark" onclick="downloadInvoice()" style="margin-top:15px">⬇ Download as Image</button>
   </div>
 </div>
 
@@ -350,26 +347,24 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <div class="stat-card stat-Rejected"><div class="stat-num" id="statRejected">-</div><div class="stat-label">Rejected</div></div>
   </div>
   <div class="card">
-    <div class="section-tag">By Month</div>
-    <div id="analysisByMonth"><p class="loading-text">Loading...</p></div>
+    <div class="section-tag">✅ Approved Records</div>
+    <div id="analysisApprovedList"><p class="loading-text">Loading...</p></div>
+  </div>
+  <div class="card">
+    <div class="section-tag">❌ Rejected Records</div>
+    <div id="analysisRejectedList"><p class="loading-text">Loading...</p></div>
   </div>
 </div>
 
 <!-- MASTER RECORD -->
 <div id="stepMaster" class="hidden">
-  <div class="print-header">
-    <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
-    <p>OT Master Record — Approved Requests</p>
-    <p id="masterPrintBranch"></p>
-  </div>
-  <div class="card no-print">
+  <div class="card">
     <span class="back-link" onclick="show('stepDashboard')">← Back</span>
     <h2>Master Record</h2>
     <p class="subtitle" id="masterSubtitle"></p>
     <select id="masterMonthFilter" onchange="filterMaster()" style="margin-top:10px">
       <option value="">All Months</option>
     </select>
-    <button class="btn-print no-print" onclick="window.print()" style="margin-top:10px">🖨️ Print Master Record</button>
   </div>
   <div id="masterList"><p class="loading-text">Loading...</p></div>
 </div>
@@ -384,66 +379,50 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
   </div>
 </div>
 
-</div><!-- end container -->
+</div>
+
+<!-- HIDDEN INVOICE FOR DOWNLOAD -->
+<div id="invoicePrintArea" style="position:fixed;left:-9999px;top:0;width:500px;"></div>
 
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzUIQtbRBm9iTITgNgXz1UGcx5BqCrz0IM20BAtHkGp4RroD2LOnxzx5jC9N7lxIt_h/exec";
-let currentUser=null;
-let currentDetail=null;
-let allMasterData=[];
-let teamMemberCount=0;
-
+let currentUser=null,currentDetail=null,allMasterData=[],detailFromAnalysis=false;
 const ALL_STEPS=["stepLogin","stepRegister","stepDashboard","stepProfile","stepType","stepForm","stepDetail","stepAnalysis","stepMaster","stepSuccess"];
 
-function show(id){
-  ALL_STEPS.forEach(s=>document.getElementById(s).classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-  window.scrollTo(0,0);
-}
-
+function show(id){ALL_STEPS.forEach(s=>document.getElementById(s).classList.add("hidden"));document.getElementById(id).classList.remove("hidden");window.scrollTo(0,0);}
 function removeInvalid(el){el.classList.remove("invalid-field");}
+function callAPI(p){return fetch(SCRIPT_URL,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)}).then(r=>r.json());}
 
-function callAPI(payload){
-  return fetch(SCRIPT_URL,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).then(r=>r.json());
-}
-
-function fmtDate(val){
+function safeDate(val){
   if(!val) return "";
-  const d=new Date(val);
-  if(isNaN(d)) return String(val);
-  return d.toLocaleDateString("en-GB")+" "+d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
-}
-
-function fmtDateOnly(val){
-  if(!val) return "";
-  const d=new Date(val);
-  if(isNaN(d)) return String(val);
-  return d.toLocaleDateString("en-GB");
+  const s=String(val).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)){const[y,m,d]=s.split("-");return d+"/"+m+"/"+y;}
+  if(/^\d+\/\d+\/\d+/.test(s)){
+    const parts=s.split(" "),dp=parts[0].split("/");
+    const mon=String(dp[0]).padStart(2,"0"),day=String(dp[1]).padStart(2,"0"),yr=dp[2];
+    return day+"/"+mon+"/"+yr+(parts[1]?" "+parts[1]:"");
+  }
+  const d=new Date(s);if(isNaN(d)) return s;
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
 }
 
 function monthKey(val){
   if(!val) return "";
-  const d=new Date(val);
-  if(isNaN(d)) return "";
+  const s=String(val).trim();
+  if(/^\d+\/\d+\/\d+/.test(s)){const p=s.split(" ")[0].split("/");return p[2]+"-"+String(p[0]).padStart(2,"0");}
+  if(/^\d{4}-\d{2}/.test(s)) return s.substring(0,7);
+  const d=new Date(s);if(isNaN(d)) return "";
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
 }
-
-function monthLabel(key){
-  if(!key) return "";
-  const [y,m]=key.split("-");
-  const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return months[parseInt(m)-1]+" "+y;
-}
+function monthLabel(k){if(!k) return "";const[y,m]=k.split("-");return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m)-1]+" "+y;}
 
 // LOGIN
 function doLogin(){
-  const email=document.getElementById("loginEmail").value.trim();
-  const password=document.getElementById("loginPassword").value.trim();
+  const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value.trim();
   const err=document.getElementById("loginError");
   if(!email||!password){err.style.display="block";err.textContent="Please enter your email and password.";return;}
   err.style.display="none";
-  const btn=document.getElementById("btnLogin");
-  btn.disabled=true;btn.textContent="Logging in...";
+  const btn=document.getElementById("btnLogin");btn.disabled=true;btn.textContent="Logging in...";
   callAPI({action:"checkLogin",email,password}).then(data=>{
     btn.disabled=false;btn.textContent="Login →";
     if(data.found){currentUser=data;loadDashboard();}
@@ -461,13 +440,10 @@ function doRegister(){
   const err=document.getElementById("regError");
   if(!valid){err.style.display="block";err.textContent="Please fill in all required fields.";return;}
   const pw=document.getElementById("regPassword").value;
-  const pw2=document.getElementById("regPasswordConfirm").value;
-  if(pw!==pw2){document.getElementById("regPasswordConfirm").classList.add("invalid-field");err.style.display="block";err.textContent="Passwords do not match.";return;}
+  if(pw!==document.getElementById("regPasswordConfirm").value){document.getElementById("regPasswordConfirm").classList.add("invalid-field");err.style.display="block";err.textContent="Passwords do not match.";return;}
   err.style.display="none";
-  const payload={action:"register",ic:document.getElementById("regIC").value.trim(),name:document.getElementById("regName").value.trim(),branch:document.getElementById("regBranch").value,contact:document.getElementById("regContact").value.trim(),department:document.getElementById("regDepartment").value.trim(),workEmail:document.getElementById("regEmail").value.trim(),password:pw};
-  const btn=document.getElementById("btnRegister");
-  btn.disabled=true;btn.textContent="Registering...";
-  callAPI(payload).then(res=>{
+  const btn=document.getElementById("btnRegister");btn.disabled=true;btn.textContent="Registering...";
+  callAPI({action:"register",ic:document.getElementById("regIC").value.trim(),name:document.getElementById("regName").value.trim(),branch:document.getElementById("regBranch").value,contact:document.getElementById("regContact").value.trim(),department:document.getElementById("regDepartment").value.trim(),workEmail:document.getElementById("regEmail").value.trim(),password:pw}).then(res=>{
     btn.disabled=false;btn.textContent="Register →";
     if(res.success){alert("Registration successful! Please login.");show("stepLogin");}
     else{err.style.display="block";err.textContent=res.error||"Registration failed.";}
@@ -482,32 +458,26 @@ function loadDashboard(){
   document.getElementById("approverBtns").classList.toggle("hidden",!isApprover);
   show("stepDashboard");
   document.getElementById("myRequestsList").innerHTML='<p class="loading-text">Loading...</p>';
-  callAPI({action:"getMyRequests",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"myRequestsList",false));
+  callAPI({action:"getMyRequests",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"myRequestsList",false,false));
   const pc=document.getElementById("pendingApprovalCard");
   if(isApprover){
     pc.classList.remove("hidden");
     document.getElementById("pendingApprovalList").innerHTML='<p class="loading-text">Loading...</p>';
-    callAPI({action:"getPendingApprovals",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"pendingApprovalList",true));
+    callAPI({action:"getPendingApprovals",ic:currentUser.IC}).then(data=>renderRequestList(data.requests,"pendingApprovalList",true,false));
   }else pc.classList.add("hidden");
 }
 
-function renderRequestList(requests,containerId,showApproveButtons){
+function renderRequestList(requests,containerId,showApproveButtons,fromAnalysis){
   const container=document.getElementById(containerId);
-  if(!requests||requests.length===0){container.innerHTML='<p class="empty-msg">No requests found.</p>';return;}
+  if(!requests||!requests.length){container.innerHTML='<p class="empty-msg">No requests found.</p>';return;}
   container.innerHTML="";
   requests.slice().reverse().forEach(r=>{
-    const div=document.createElement("div");
-    div.className="req-item";
-    div.onclick=()=>openDetail(r,showApproveButtons);
-    div.innerHTML=`
-      <div class="req-ref">Ref: ${r.RequestID||"-"}</div>
-      <div class="req-item-top">
-        <span class="req-job">${r.JobNo||"-"}</span>
-        <span class="status-pill status-${r.Status}">${r.Status}</span>
-      </div>
+    const div=document.createElement("div");div.className="req-item";
+    div.onclick=()=>openDetail(r,showApproveButtons,fromAnalysis);
+    div.innerHTML=`<div class="req-ref">Ref: ${r.RequestID||"-"}</div>
+      <div class="req-item-top"><span class="req-job">${r.JobNo||"-"}</span><span class="status-pill status-${r.Status}">${r.Status}</span></div>
       <div class="req-detail">${r.RequesterName} | ${r.Branch}<br>${r.Date} | ${r.Time}</div>
-      <div class="req-submitted">Submitted: ${fmtDate(r.Timestamp)}</div>
-    `;
+      <div class="req-submitted">Submitted: ${safeDate(r.Timestamp)}</div>`;
     container.appendChild(div);
   });
 }
@@ -520,6 +490,11 @@ function openProfile(){
   document.getElementById("pContact").value=currentUser.Contact||"";
   document.getElementById("pDepartment").value=currentUser.Department||"";
   document.getElementById("pEmail").value=currentUser.WorkEmail||"";
+  document.getElementById("cpCurrent").value="";
+  document.getElementById("cpNew").value="";
+  document.getElementById("cpConfirm").value="";
+  document.getElementById("cpError").style.display="none";
+  document.getElementById("cpSuccess").style.display="none";
   show("stepProfile");
 }
 function saveProfile(){
@@ -528,69 +503,145 @@ function saveProfile(){
   currentUser.Contact=document.getElementById("pContact").value;
   currentUser.Department=document.getElementById("pDepartment").value;
   currentUser.WorkEmail=document.getElementById("pEmail").value;
+  alert("Profile saved!");
   loadDashboard();
+}
+function changePassword(){
+  const current=document.getElementById("cpCurrent").value.trim(),newPw=document.getElementById("cpNew").value.trim(),confirm=document.getElementById("cpConfirm").value.trim();
+  const err=document.getElementById("cpError"),suc=document.getElementById("cpSuccess");
+  suc.style.display="none";
+  if(!current||!newPw||!confirm){err.style.display="block";err.textContent="Please fill in all fields.";return;}
+  if(newPw!==confirm){err.style.display="block";err.textContent="New passwords do not match.";return;}
+  err.style.display="none";
+  const btn=document.getElementById("btnChangePass");btn.disabled=true;btn.textContent="Updating...";
+  callAPI({action:"changePassword",email:currentUser.WorkEmail,currentPassword:current,newPassword:newPw}).then(res=>{
+    btn.disabled=false;btn.textContent="Change Password";
+    if(res.success){suc.style.display="block";document.getElementById("cpCurrent").value="";document.getElementById("cpNew").value="";document.getElementById("cpConfirm").value="";}
+    else{err.style.display="block";err.textContent=res.error||"Failed to change password.";}
+  }).catch(()=>{btn.disabled=false;btn.textContent="Change Password";alert("Error.");});
 }
 
 // DETAIL
-function openDetail(r,isApprover){
-  currentDetail=r;
+function openDetail(r,isApprover,fromAnalysis){
+  currentDetail=r;detailFromAnalysis=fromAnalysis||false;
   const status=r.Status||"Pending";
-  const statusEmoji=status==="Approved"?"✅":status==="Rejected"?"❌":"⏳";
-  let bannerHtml=`<div class="status-banner status-banner-${status}">
-    <div class="status-banner-label">Reference Number</div>
-    <div class="status-banner-ref">${r.RequestID||"-"}</div>
-    <div class="status-banner-status">${statusEmoji} ${status}</div>
-    <div class="status-banner-meta">Submitted: ${fmtDate(r.Timestamp)}`;
+  const emoji=status==="Approved"?"✅":status==="Rejected"?"❌":"⏳";
+
+  // Invoice-style banner
+  let banner=`<div class="invoice-banner status-${status}">
+    <div class="inv-ref">Reference No: ${r.RequestID||"-"}</div>
+    <div class="invoice-status">${emoji} ${status}</div>
+    <div class="invoice-row"><span class="invoice-label">Applicant</span><span class="invoice-value">${r.RequesterName||"-"}</span></div>
+    <div class="invoice-row"><span class="invoice-label">Branch</span><span class="invoice-value">${r.Branch||"-"}</span></div>
+    <div class="invoice-row"><span class="invoice-label">Submitted</span><span class="invoice-value">${safeDate(r.Timestamp)}</span></div>
+    <div class="invoice-row"><span class="invoice-label">Submitted To</span><span class="invoice-value">${r.ApproverName||r.ApproverIC||"-"}</span></div>`;
   if(status!=="Pending"&&r.ApprovedAt){
-    bannerHtml+=`<br>${status} by: ${r.ApprovedBy||"-"}<br>${status} on: ${fmtDate(r.ApprovedAt)}`;
+    banner+=`<div class="invoice-row"><span class="invoice-label">${status} By</span><span class="invoice-value">${r.ApprovedBy||"-"}</span></div>
+    <div class="invoice-row"><span class="invoice-label">${status} On</span><span class="invoice-value">${safeDate(r.ApprovedAt)}</span></div>`;
   }
-  bannerHtml+=`</div></div>`;
-  document.getElementById("detailStatusBanner").innerHTML=bannerHtml;
+  banner+=`</div>`;
+  document.getElementById("detailStatusBanner").innerHTML=banner;
   document.getElementById("dBranch").value=r.Branch||"";
   document.getElementById("dJobNo").value=r.JobNo||"";
   document.getElementById("dDate").value=r.Date||"";
   document.getElementById("dTime").value=r.Time||"";
   document.getElementById("dWorkLocation").value=r.WorkLocation||"";
   document.getElementById("dReason").value=r.Reason||"";
-  const teamWrap=document.getElementById("dTeamWrap");
-  if(r.TeamMembers&&r.TeamMembers.trim()){teamWrap.classList.remove("hidden");document.getElementById("dTeamMembers").value=r.TeamMembers;}
-  else teamWrap.classList.add("hidden");
-  const docWrap=document.getElementById("dDocWrap");
-  if(r.DocLink&&r.DocLink.trim()){docWrap.classList.remove("hidden");document.getElementById("dDocLink").href=r.DocLink;}
-  else docWrap.classList.add("hidden");
-  document.getElementById("dApprover").value=r.ApproverName||r.ApproverIC||"";
-  const approveWrap=document.getElementById("detailApproveWrap");
-  if(isApprover&&status==="Pending") approveWrap.classList.remove("hidden");
-  else approveWrap.classList.add("hidden");
+  const tw=document.getElementById("dTeamWrap");
+  if(r.TeamMembers&&r.TeamMembers.trim()){tw.classList.remove("hidden");document.getElementById("dTeamMembers").value=r.TeamMembers;}else tw.classList.add("hidden");
+  const dw=document.getElementById("dDocWrap");
+  if(r.DocLink&&r.DocLink.trim()){dw.classList.remove("hidden");document.getElementById("dDocLink").href=r.DocLink;}else dw.classList.add("hidden");
+  const aw=document.getElementById("detailApproveWrap");
+  if(isApprover&&status==="Pending") aw.classList.remove("hidden");else aw.classList.add("hidden");
   show("stepDetail");
 }
 
 function actOnDetail(newStatus){
   if(!currentDetail) return;
   callAPI({action:"approveReject",requestId:currentDetail.RequestID,newStatus,approverName:currentUser.Name}).then(()=>{
-    currentDetail.Status=newStatus;
-    currentDetail.ApprovedAt=new Date().toISOString();
-    currentDetail.ApprovedBy=currentUser.Name;
-    openDetail(currentDetail,false);
+    currentDetail.Status=newStatus;currentDetail.ApprovedAt=new Date().toISOString();currentDetail.ApprovedBy=currentUser.Name;
+    openDetail(currentDetail,false,detailFromAnalysis);
     loadDashboard();
   });
 }
 
-function actOnRequest(requestId,newStatus){
-  callAPI({action:"approveReject",requestId,newStatus,approverName:currentUser.Name}).then(()=>loadDashboard());
+// DOWNLOAD AS IMAGE
+function downloadInvoice(){
+  if(!currentDetail) return;
+  const r=currentDetail;
+  const status=r.Status||"Pending";
+  const emoji=status==="Approved"?"✅":status==="Rejected"?"❌":"⏳";
+  const area=document.getElementById("invoicePrintArea");
+
+  let teamHtml="";
+  if(r.TeamMembers&&r.TeamMembers.trim()){
+    teamHtml=`<div class="inv-section">Team Members</div><div class="inv-row"><span class="inv-row-label">${r.TeamMembers.replace(/,\s*/g,"<br>")}</span></div>`;
+  }
+  let docHtml="";
+  if(r.DocLink&&r.DocLink.trim()){
+    docHtml=`<div class="inv-section">Supporting Document</div><div class="inv-row"><span class="inv-row-label" style="color:#ff6200">${r.DocLink}</span></div>`;
+  }
+  let approvedHtml="";
+  if(status!=="Pending"&&r.ApprovedAt){
+    approvedHtml=`<div class="inv-row"><span class="inv-row-label">${status} By</span><span class="inv-row-val">${r.ApprovedBy||"-"}</span></div>
+    <div class="inv-row"><span class="inv-row-label">${status} On</span><span class="inv-row-val">${safeDate(r.ApprovedAt)}</span></div>`;
+  }
+
+  area.innerHTML=`
+    <div id="invoiceContent" style="background:#fff;padding:24px;font-family:Arial,sans-serif;font-size:14px;color:#333;width:480px">
+      <div class="inv-header">
+        <h1>Hyperwave Systems Engineering Sdn Bhd</h1>
+        <p>OT Approval Form</p>
+      </div>
+      <div class="inv-banner status-${status}">
+        <div class="inv-ref">Reference No: ${r.RequestID||"-"}</div>
+        <div class="inv-status">${emoji} ${status}</div>
+        <div class="inv-row"><span class="inv-row-label">Applicant</span><span class="inv-row-val">${r.RequesterName||"-"}</span></div>
+        <div class="inv-row"><span class="inv-row-label">Branch</span><span class="inv-row-val">${r.Branch||"-"}</span></div>
+        <div class="inv-row"><span class="inv-row-label">Submitted</span><span class="inv-row-val">${safeDate(r.Timestamp)}</span></div>
+        <div class="inv-row"><span class="inv-row-label">Submitted To</span><span class="inv-row-val">${r.ApproverName||r.ApproverIC||"-"}</span></div>
+        ${approvedHtml}
+      </div>
+      <div class="inv-section">OT Details</div>
+      <div class="inv-row"><span class="inv-row-label">Job No.</span><span class="inv-row-val">${r.JobNo||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Date</span><span class="inv-row-val">${r.Date||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">OT Time</span><span class="inv-row-val">${r.Time||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Work Location</span><span class="inv-row-val">${r.WorkLocation||"-"}</span></div>
+      <div class="inv-row"><span class="inv-row-label">Reason</span><span class="inv-row-val">${r.Reason||"-"}</span></div>
+      ${teamHtml}${docHtml}
+      <div class="inv-footer">Generated by Hyperwave OT Approval System</div>
+    </div>`;
+
+  const btn=document.querySelector('.btn-dark');
+  btn.disabled=true;btn.textContent="Generating...";
+
+  setTimeout(()=>{
+    html2canvas(document.getElementById("invoiceContent"),{scale:2,backgroundColor:"#fff",useCORS:true}).then(canvas=>{
+      const link=document.createElement("a");
+      link.download="OT_"+( r.RequestID||"record")+".png";
+      link.href=canvas.toDataURL("image/png");
+      link.click();
+      btn.disabled=false;btn.textContent="⬇ Download as Image";
+    }).catch(()=>{btn.disabled=false;btn.textContent="⬇ Download as Image";alert("Download failed. Please try again.");});
+  },100);
 }
 
-// TEAM
+// TEAM MEMBERS
 function addTeamMemberRow(){
   const list=document.getElementById("teamMembersList");
-  const row=document.createElement("div");
-  row.className="team-row";
-  row.innerHTML=`<span class="team-num">${list.children.length+1}.</span><input type="text" class="teamMemberInput" placeholder="Member name"><button type="button" class="team-remove" onclick="removeTeamMemberRow(this)">×</button>`;
+  const row=document.createElement("div");row.className="team-row";
+  row.innerHTML=`<span class="team-num">${list.children.length+1}.</span><input type="text" class="teamMemberName" placeholder="Name" style="flex:1"><input type="text" class="teamMemberDesig" placeholder="Designation" style="flex:1"><button type="button" class="team-remove" onclick="removeTeamMemberRow(this)">×</button>`;
   list.appendChild(row);
 }
-function removeTeamMemberRow(btn){btn.parentElement.remove();renumberTeamRows();}
-function renumberTeamRows(){document.querySelectorAll("#teamMembersList .team-row").forEach((row,idx)=>row.querySelector(".team-num").textContent=(idx+1)+".");}
-function getTeamMembersList(){return Array.from(document.querySelectorAll(".teamMemberInput")).map(i=>i.value.trim()).filter(v=>v.length>0);}
+function removeTeamMemberRow(btn){btn.parentElement.remove();document.querySelectorAll("#teamMembersList .team-row").forEach((r,i)=>r.querySelector(".team-num").textContent=(i+1)+".");}
+function getTeamMembersList(){
+  return Array.from(document.querySelectorAll("#teamMembersList .team-row")).map(row=>{
+    const name=row.querySelector(".teamMemberName").value.trim();
+    const desig=row.querySelector(".teamMemberDesig").value.trim();
+    if(!name) return null;
+    return desig?name+" ("+desig+")":name;
+  }).filter(Boolean);
+}
 
 // OT FORM
 function openNewRequest(){
@@ -599,7 +650,6 @@ function openNewRequest(){
   document.getElementById("lbl-type-team").classList.remove("selected");
   document.getElementById("teamMembersWrap").classList.add("hidden");
   document.getElementById("teamMembersList").innerHTML="";
-  teamMemberCount=0;
   addTeamMemberRow();addTeamMemberRow();addTeamMemberRow();
   show("stepType");
 }
@@ -613,33 +663,27 @@ function goToForm(){
   const val=document.querySelector('input[name="reqType"]:checked').value;
   if(val==="Team"&&getTeamMembersList().length===0){alert("Please add at least one team member.");return;}
   ["fBranch","fJobNo","fDate","fTimeFrom","fTimeTo","fWorkLocation","fReason"].forEach(id=>{document.getElementById(id).value="";document.getElementById(id).classList.remove("invalid-field");});
-  document.getElementById("fFile").value="";
-  document.getElementById("otDurationText").textContent="";
+  document.getElementById("fFile").value="";document.getElementById("otDurationText").textContent="";
   document.getElementById("fApprover").innerHTML='<option value="">Select Branch First</option>';
   show("stepForm");
 }
 function loadApprovers(){
-  const branch=document.getElementById("fBranch").value;
-  const sel=document.getElementById("fApprover");
+  const branch=document.getElementById("fBranch").value,sel=document.getElementById("fApprover");
   if(!branch){sel.innerHTML='<option value="">Select Branch First</option>';return;}
   sel.innerHTML='<option value="">Loading...</option>';
   callAPI({action:"getApprovers",branch}).then(data=>{
     sel.innerHTML='<option value="">Select Approver</option>';
-    (data.approvers||[]).forEach(a=>{const opt=document.createElement("option");opt.value=a.ic;opt.textContent=a.name;sel.appendChild(opt);});
-    if(!data.approvers||data.approvers.length===0) sel.innerHTML='<option value="">No approvers for this branch</option>';
+    (data.approvers||[]).forEach(a=>{const o=document.createElement("option");o.value=a.ic;o.textContent=a.name;sel.appendChild(o);});
+    if(!data.approvers||!data.approvers.length) sel.innerHTML='<option value="">No approvers for this branch</option>';
   });
 }
-function calcOTDuration(){const l=getOTDurationLabel();document.getElementById("otDurationText").textContent=l?"OT Duration: "+l:"";}
+function calcOTDuration(){document.getElementById("otDurationText").textContent=getOTDurationLabel()?"OT Duration: "+getOTDurationLabel():"";}
 function getOTDurationLabel(){
-  const from=document.getElementById("fTimeFrom").value;
-  const to=document.getElementById("fTimeTo").value;
+  const from=document.getElementById("fTimeFrom").value,to=document.getElementById("fTimeTo").value;
   if(!from||!to) return "";
-  const [fh,fm]=from.split(":").map(Number);
-  const [th,tm]=to.split(":").map(Number);
-  let diff=(th*60+tm)-(fh*60+fm);
-  if(diff<0) diff+=1440;
-  const h=Math.floor(diff/60),m=diff%60;
-  return h===0?m+"m":m===0?h+"h":h+"h "+m+"m";
+  const[fh,fm]=from.split(":").map(Number),[th,tm]=to.split(":").map(Number);
+  let diff=(th*60+tm)-(fh*60+fm);if(diff<0) diff+=1440;
+  const h=Math.floor(diff/60),m=diff%60;return h===0?m+"m":m===0?h+"h":h+"h "+m+"m";
 }
 function readFileAsBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file);});}
 function submitOTRequest(){
@@ -650,78 +694,45 @@ function submitOTRequest(){
   });
   if(!valid){document.getElementById("formError").style.display="block";document.querySelector(".invalid-field")?.scrollIntoView({behavior:"smooth",block:"center"});return;}
   document.getElementById("formError").style.display="none";
-  const btn=document.getElementById("btnSubmitRequest");
-  btn.disabled=true;btn.textContent="Submitting...";
+  const btn=document.getElementById("btnSubmitRequest");btn.disabled=true;btn.textContent="Submitting...";
   const reqType=document.querySelector('input[name="reqType"]:checked').value;
   const approverSelect=document.getElementById("fApprover");
-  const basePayload={
-    action:"submitRequest",requesterIC:currentUser.IC,requesterName:currentUser.Name,
-    type:reqType,teamMembers:reqType==="Team"?getTeamMembersList().join(", "):"",
+  const base={action:"submitRequest",requesterIC:currentUser.IC,requesterName:currentUser.Name,type:reqType,
+    teamMembers:reqType==="Team"?getTeamMembersList().join(", "):"",
     branch:document.getElementById("fBranch").value,jobNo:document.getElementById("fJobNo").value.trim(),
     date:document.getElementById("fDate").value,
     time:document.getElementById("fTimeFrom").value+" - "+document.getElementById("fTimeTo").value+" ("+getOTDurationLabel()+")",
     workLocation:document.getElementById("fWorkLocation").value.trim(),reason:document.getElementById("fReason").value.trim(),
-    approverIC:approverSelect.value
-  };
-  const fileInput=document.getElementById("fFile");
-  const finish=payload=>callAPI(payload).then(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";show("stepSuccess");}).catch(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";alert("Submission error.");});
-  if(fileInput.files&&fileInput.files[0]){
-    const file=fileInput.files[0];
-    if(file.size>5*1024*1024){alert("File too large. Max 5MB.");btn.disabled=false;btn.textContent="Submit Request ✓";return;}
-    readFileAsBase64(file).then(base64=>{basePayload.fileBase64=base64;basePayload.fileName=file.name;basePayload.fileMimeType=file.type;finish(basePayload);});
-  }else finish(basePayload);
+    approverIC:approverSelect.value};
+  const fi=document.getElementById("fFile");
+  const done=p=>callAPI(p).then(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";show("stepSuccess");}).catch(()=>{btn.disabled=false;btn.textContent="Submit Request ✓";alert("Submission error.");});
+  if(fi.files&&fi.files[0]){
+    if(fi.files[0].size>5*1024*1024){alert("File too large. Max 5MB.");btn.disabled=false;btn.textContent="Submit Request ✓";return;}
+    readFileAsBase64(fi.files[0]).then(b=>{base.fileBase64=b;base.fileName=fi.files[0].name;base.fileMimeType=fi.files[0].type;done(base);});
+  }else done(base);
 }
 function backToDashboard(){loadDashboard();}
 
 // ANALYSIS
 function loadAnalysis(){
   document.getElementById("analysisName").textContent="Approver: "+currentUser.Name;
-  document.getElementById("statTotal").textContent="-";
-  document.getElementById("statPending").textContent="-";
-  document.getElementById("statApproved").textContent="-";
-  document.getElementById("statRejected").textContent="-";
-  document.getElementById("analysisByMonth").innerHTML='<p class="loading-text">Loading...</p>';
-  callAPI({action:"getPendingApprovals",ic:currentUser.IC}).then(pending=>{
-    callAPI({action:"getAllMyApprovals",ic:currentUser.IC}).then(all=>{
-      const allReqs=all.requests||[];
-      const pendingReqs=pending.requests||[];
-      const approved=allReqs.filter(r=>r.Status==="Approved");
-      const rejected=allReqs.filter(r=>r.Status==="Rejected");
-      const pendingAll=allReqs.filter(r=>r.Status==="Pending");
-      const total=allReqs.length;
-      document.getElementById("statTotal").textContent=total;
-      document.getElementById("statPending").textContent=pendingAll.length;
-      document.getElementById("statApproved").textContent=approved.length;
-      document.getElementById("statRejected").textContent=rejected.length;
-      // by month
-      const byMonth={};
-      allReqs.forEach(r=>{
-        const mk=monthKey(r.ApprovedAt||r.Timestamp);
-        if(!byMonth[mk]) byMonth[mk]={approved:0,rejected:0,pending:0};
-        if(r.Status==="Approved") byMonth[mk].approved++;
-        else if(r.Status==="Rejected") byMonth[mk].rejected++;
-        else byMonth[mk].pending++;
-      });
-      const container=document.getElementById("analysisByMonth");
-      const keys=Object.keys(byMonth).sort().reverse();
-      if(keys.length===0){container.innerHTML='<p class="empty-msg">No records found.</p>';return;}
-      container.innerHTML="";
-      keys.forEach(k=>{
-        const sec=document.createElement("div");
-        sec.className="month-section";
-        const d=byMonth[k];
-        sec.innerHTML=`<div class="month-header">${monthLabel(k)}</div>
-          <div style="display:flex;gap:10px;font-size:14px">
-            <span style="color:#1d7a3a">✅ Approved: ${d.approved}</span>
-            <span style="color:#c0392b">❌ Rejected: ${d.rejected}</span>
-            <span style="color:#b8860b">⏳ Pending: ${d.pending}</span>
-          </div>`;
-        container.appendChild(sec);
-      });
-    }).catch(()=>{
-      // fallback if getAllMyApprovals not yet in Apps Script
-      document.getElementById("analysisByMonth").innerHTML='<p class="empty-msg">Update Apps Script to enable full analysis.</p>';
-    });
+  ["statTotal","statPending","statApproved","statRejected"].forEach(id=>document.getElementById(id).textContent="-");
+  document.getElementById("analysisApprovedList").innerHTML='<p class="loading-text">Loading...</p>';
+  document.getElementById("analysisRejectedList").innerHTML='<p class="loading-text">Loading...</p>';
+  callAPI({action:"getAllMyApprovals",ic:currentUser.IC}).then(all=>{
+    const reqs=all.requests||[];
+    const approved=reqs.filter(r=>r.Status==="Approved");
+    const rejected=reqs.filter(r=>r.Status==="Rejected");
+    const pending=reqs.filter(r=>r.Status==="Pending");
+    document.getElementById("statTotal").textContent=reqs.length;
+    document.getElementById("statPending").textContent=pending.length;
+    document.getElementById("statApproved").textContent=approved.length;
+    document.getElementById("statRejected").textContent=rejected.length;
+    renderRequestList(approved,"analysisApprovedList",false,true);
+    renderRequestList(rejected,"analysisRejectedList",false,true);
+  }).catch(()=>{
+    document.getElementById("analysisApprovedList").innerHTML='<p class="empty-msg">Error loading.</p>';
+    document.getElementById("analysisRejectedList").innerHTML='<p class="empty-msg">Error loading.</p>';
   });
 }
 
@@ -730,71 +741,30 @@ function loadMaster(){
   allMasterData=[];
   const branches=currentUser.approverBranches||[];
   document.getElementById("masterSubtitle").textContent="Branch: "+branches.join(", ")+" — Approved Records";
-  document.getElementById("masterPrintBranch").textContent="Branch: "+branches.join(", ");
   document.getElementById("masterList").innerHTML='<p class="loading-text">Loading...</p>';
   callAPI({action:"getMasterRecord",branches}).then(data=>{
     allMasterData=data.requests||[];
-    buildMonthFilter(allMasterData);
-    filterMaster();
+    buildMonthFilter(allMasterData);filterMaster();
   }).catch(()=>{document.getElementById("masterList").innerHTML='<p class="empty-msg">Error loading records.</p>';});
 }
 function buildMonthFilter(records){
   const sel=document.getElementById("masterMonthFilter");
   const months=[...new Set(records.map(r=>monthKey(r.Timestamp)).filter(Boolean))].sort().reverse();
   sel.innerHTML='<option value="">All Months</option>';
-  months.forEach(m=>{const opt=document.createElement("option");opt.value=m;opt.textContent=monthLabel(m);sel.appendChild(opt);});
+  months.forEach(m=>{const o=document.createElement("option");o.value=m;o.textContent=monthLabel(m);sel.appendChild(o);});
 }
 function filterMaster(){
-  const filter=document.getElementById("masterMonthFilter").value;
-  const filtered=filter?allMasterData.filter(r=>monthKey(r.Timestamp)===filter):allMasterData;
-  renderMaster(filtered);
+  const f=document.getElementById("masterMonthFilter").value;
+  renderMasterList(f?allMasterData.filter(r=>monthKey(r.Timestamp)===f):allMasterData);
 }
-function changePassword(){
-  const current=document.getElementById("cpCurrent").value.trim();
-  const newPw=document.getElementById("cpNew").value.trim();
-  const confirm=document.getElementById("cpConfirm").value.trim();
-  const err=document.getElementById("cpError");
-  const suc=document.getElementById("cpSuccess");
-  suc.style.display="none";
-  if(!current||!newPw||!confirm){err.style.display="block";err.textContent="Please fill in all fields.";return;}
-  if(newPw!==confirm){err.style.display="block";err.textContent="New passwords do not match.";return;}
-  err.style.display="none";
-  const btn=document.getElementById("btnChangePass");
-  btn.disabled=true;btn.textContent="Updating...";
-  callAPI({action:"changePassword",email:currentUser.WorkEmail,currentPassword:current,newPassword:newPw}).then(res=>{
-    btn.disabled=false;btn.textContent="Change Password";
-    if(res.success){
-      suc.style.display="block";
-      document.getElementById("cpCurrent").value="";
-      document.getElementById("cpNew").value="";
-      document.getElementById("cpConfirm").value="";
-    }else{
-      err.style.display="block";
-      err.textContent=res.error||"Failed to change password.";
-    }
-  }).catch(()=>{btn.disabled=false;btn.textContent="Change Password";alert("Error. Please try again.");});
-}
-
-function renderMaster(records){
+function renderMasterList(records){
   const container=document.getElementById("masterList");
-  if(!records||records.length===0){container.innerHTML='<p class="empty-msg">No approved records found.</p>';return;}
+  if(!records||!records.length){container.innerHTML='<p class="empty-msg">No approved records found.</p>';return;}
   container.innerHTML="";
   records.forEach(r=>{
-    const div=document.createElement("div");
-    div.className="card master-item";
-    div.onclick=()=>openDetail(r,false);
-    div.innerHTML=`
-      <div class="master-item-row">
-        <span class="master-name">${r.RequesterName}</span>
-        <span class="status-pill status-${r.Status}">${r.Status}</span>
-      </div>
-      <div class="master-detail">
-        Ref: ${r.RequestID||"-"}<br>
-        Branch: ${r.Branch} | Job No: ${r.JobNo}<br>
-        Date: ${r.Date} | Time: ${r.Time}<br>
-        Submitted: ${fmtDate(r.Timestamp)}<br>
-        ${r.Status!=="Pending"&&r.ApprovedBy?r.Status+" by: "+r.ApprovedBy+" on "+fmtDate(r.ApprovedAt):""}
-      </div>`;
+    const div=document.createElement("div");div.className="card master-item";div.onclick=()=>openDetail(r,false,false);
+    div.innerHTML=`<div class="master-item-row"><span class="master-name">${r.RequesterName}</span><span class="status-pill status-${r.Status}">${r.Status}</span></div>
+      <div class="master-detail">Ref: ${r.RequestID||"-"}<br>Branch: ${r.Branch} | Job No: ${r.JobNo}<br>Date: ${r.Date} | ${r.Time}<br>Submitted: ${safeDate(r.Timestamp)}<br>${r.ApprovedBy?"Approved by: "+r.ApprovedBy+" on "+safeDate(r.ApprovedAt):""}</div>`;
     container.appendChild(div);
   });
 }
