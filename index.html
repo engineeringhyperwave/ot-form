@@ -129,27 +129,38 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
   color: white; margin-top: 15px; font-size: 14px;
 }
 
-/* 强制 Master Record 恢复紧凑形状，不影响其他页面 */
-#masterList .master-item {
-  padding: 8px 12px !important; /* 强制减少内边距 */
-  margin-bottom: 6px !important; /* 强制减少每项之间的距离 */
-  min-height: auto !important;   /* 防止高度被撑开 */
+.master-item {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px; /* 这里的 padding 决定了它肥不肥 */
+  margin-bottom: 10px;
+  cursor: pointer;
+  background: #fff; /* 必须加背景色，因为去掉了 card */
+  transition: box-shadow 0.15s;
 }
 
-#masterList .master-item-row {
-  margin-bottom: 2px !important; /* 缩小名字和状态之间的距离 */
+.master-item:active {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-#masterList .master-detail {
-  font-size: 11px !important;    /* 缩小详情文字 */
-  line-height: 1.3 !important;   /* 缩小行间距，防止变肥 */
-  color: #777 !important;
+.master-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-#masterList .status-pill {
-  transform: scale(0.85);        /* 让状态标签稍微缩小一点 */
-  transform-origin: right;
+.master-name {
+  font-weight: bold;
+  font-size: 14px;
 }
+
+.master-detail {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+}
+
 </style>
 </head>
 <body>
@@ -852,13 +863,19 @@ function renderMasterList(records){
   if(!records||!records.length){container.innerHTML='<p class="empty-msg">No approved records found.</p>';return;}
   container.innerHTML="";
   records.forEach(r=>{
-    const div=document.createElement("div");div.className="card master-item";div.onclick=()=>openDetail(r,false,false);
+    const div=document.createElement("div");
+    
+    // 【修改这里】把原来的 div.className="card master-item"; 
+    // 改成下面这样，去掉 "card"
+    div.className="master-item"; 
+    
+    div.onclick=()=>openDetail(r,false,false);
     div.innerHTML=`<div class="master-item-row"><span class="master-name">${r.RequesterName}</span><span class="status-pill status-${r.Status}">${r.Status}</span></div>
       <div class="master-detail">Ref: ${r.RequestID||"-"}<br>Branch: ${r.Branch} | Job No: ${r.JobNo}<br>Date: ${r.Date} | ${r.Time}<br>Submitted: ${safeDate(r.Timestamp)}<br>${r.ApprovedBy?"Approved by: "+r.ApprovedBy+" on "+safeDate(r.ApprovedAt):""}</div>`;
     container.appendChild(div);
   });
 }
-// 修复版：预览整个分析页面（解决截断/Crop不全问题）
+
 function previewAnalysis() {
   const area = document.getElementById("stepAnalysis");
   const actionBtns = area.querySelector('div[style*="padding: 0 5px 20px"]');
