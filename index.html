@@ -836,46 +836,63 @@ function renderMasterList(records){
     container.appendChild(div);
   });
 }
-// 预览整个分析页面
+// 修复版：预览整个分析页面（解决截断/Crop不全问题）
 function previewAnalysis() {
   const area = document.getElementById("stepAnalysis");
-  
-  // 截图前暂时隐藏一下底部的预览/下载按钮，避免把按钮也拍进去
   const actionBtns = area.querySelector('div[style*="padding: 0 5px 20px"]');
-  if(actionBtns) actionBtns.style.opacity = "0";
+  if(actionBtns) actionBtns.style.display = "none"; // 临时隐藏按钮
+
+  // 【核心修复1】记录当前滚动位置，瞬间滚回最顶部，防止 html2canvas 截断
+  const scrollPos = window.scrollY;
+  window.scrollTo(0, 0);
 
   html2canvas(area, {
     scale: 2,
-    backgroundColor: "#f5f5f5", // 匹配背景色
-    useCORS: true
+    backgroundColor: "#f5f5f5",
+    useCORS: true,
+    scrollY: 0,  // 【核心修复2】强制 Y 轴起点为 0
+    scrollX: 0
   }).then(canvas => {
-    // 拍完照恢复按钮显示
-    if(actionBtns) actionBtns.style.opacity = "1";
+    window.scrollTo(0, scrollPos); // 截图完恢复页面原来的滚动位置
+    if(actionBtns) actionBtns.style.display = "block";
 
     const imgData = canvas.toDataURL("image/png");
-
-    // 创建预览弹窗（使用之前给你的 CSS 来防止图片太 Zoom）
     const div = document.createElement('div');
     div.id = 'tempPreview'; 
     div.innerHTML = `<img src="${imgData}"><p style="color:white;margin-top:10px">Click anywhere to close</p>`;
-    
     div.onclick = () => div.remove();
     document.body.appendChild(div);
+  }).catch(() => {
+    window.scrollTo(0, scrollPos);
+    if(actionBtns) actionBtns.style.display = "block";
   });
 }
 
-// 下载整个分析页面图片
+// 修复版：下载整个分析页面
 function downloadAnalysisImage() {
   const area = document.getElementById("stepAnalysis");
   const actionBtns = area.querySelector('div[style*="padding: 0 5px 20px"]');
-  if(actionBtns) actionBtns.style.opacity = "0";
+  if(actionBtns) actionBtns.style.display = "none";
 
-  html2canvas(area, { scale: 2, backgroundColor: "#f5f5f5" }).then(canvas => {
-    if(actionBtns) actionBtns.style.opacity = "1";
+  const scrollPos = window.scrollY;
+  window.scrollTo(0, 0);
+
+  html2canvas(area, { 
+    scale: 2, 
+    backgroundColor: "#f5f5f5",
+    scrollY: 0,
+    scrollX: 0
+  }).then(canvas => {
+    window.scrollTo(0, scrollPos);
+    if(actionBtns) actionBtns.style.display = "block";
+    
     const link = document.createElement("a");
     link.download = "My_Approval_Analysis.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
+  }).catch(() => {
+    window.scrollTo(0, scrollPos);
+    if(actionBtns) actionBtns.style.display = "block";
   });
 }
 </script>
