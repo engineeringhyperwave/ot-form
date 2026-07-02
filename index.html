@@ -106,19 +106,24 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
 #invoicePrintArea .inv-section{font-size:11px;color:#ff6200;font-weight:bold;text-transform:uppercase;margin:12px 0 6px}
 #invoicePrintArea .inv-footer{margin-top:16px;font-size:11px;color:#aaa;text-align:center}
 /* 这是专门管预览图片大小的 CSS */
+/* 预览层背景：黑底 */
 #tempPreview {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.85); z-index: 10000;
-  display: flex; justify-content: center; align-items: center;
+  background: rgba(0,0,0,0.8); z-index: 10000;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
   cursor: pointer;
 }
-
+/* 预览图片：限制宽度，防止太大 */
 #tempPreview img {
-  max-width: 90%;    /* 限制宽度为屏幕的90%，这样就不zoom了 */
-  max-height: 85%;   /* 限制高度 */
-  border-radius: 5px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  max-width: 90%;    /* 限制宽度为屏幕90% */
+  max-height: 80%;   /* 限制高度 */
   background: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  border-radius: 4px;
+}
+#tempPreview:after {
+  content: "Click anywhere to close";
+  color: #ccc; margin-top: 15px; font-size: 14px;
 }
 </style>
 </head>
@@ -320,6 +325,7 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <span class="back-link" id="detailBackLink" onclick="show('stepDashboard')">← Back</span>
     <div id="detailStatusBanner"></div>
     <div class="section-tag" style="margin-top:10px">OT Details</div>
+    
     <label>Branch</label>
     <input type="text" id="dBranch" disabled>
     <label>Job No.</label>
@@ -332,24 +338,30 @@ hr{border:none;border-top:1px solid #eee;margin:18px 0}
     <input type="text" id="dWorkLocation" disabled>
     <label>Reason</label>
     <textarea id="dReason" disabled></textarea>
+    
     <div id="dTeamWrap" class="hidden">
       <label>Team Members</label>
       <textarea id="dTeamMembers" disabled style="height:90px"></textarea>
     </div>
+    
     <div id="dDocWrap" class="hidden" style="margin-top:14px">
       <label>Supporting Document</label>
       <a id="dDocLink" href="#" target="_blank" style="display:block;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;color:#ff6200">📎 View Attachment</a>
     </div>
+    
+    <!-- 审批按钮 (只有Pending时显示) -->
     <div id="detailApproveWrap" class="hidden">
       <div class="approve-btns" style="margin-top:16px">
         <button class="btn-approve" onclick="actOnDetail('Approved')">✓ Approve</button>
         <button class="btn-reject" onclick="actOnDetail('Rejected')">✗ Reject</button>
       </div>
     </div>
-    <div style="margin-top:15px">
-    <button class="btn-outline" style="margin-top:0; margin-bottom:10px" onclick="previewInvoice()">👁 Preview</button>
-    <button class="btn-dark" style="margin-top:0" onclick="downloadInvoice()">⬇ Download</button>
-  </div>
+    
+    <!-- 预览和下载按钮 (确保这一块永远在最下面，且不被隐藏) -->
+    <div id="previewAreaBtns" style="margin-top:15px; display:block !important;">
+      <button class="btn-outline" style="margin-top:0; margin-bottom:10px" onclick="previewInvoice()">👁 Preview</button>
+      <button class="btn-dark" style="margin-top:0" onclick="downloadInvoice()">⬇ Download</button>
+    </div>
   </div>
 </div>
 
@@ -622,34 +634,43 @@ function buildInvoiceHTML(r){
 
 function previewInvoice() {
   if (!currentDetail) return;
-  
-  // 1. 准备数据
   const area = document.getElementById("invoicePrintArea");
-  // 确保你有 buildInvoiceHTML 这个函数，或者直接渲染
-  area.innerHTML = buildInvoiceHTML(currentDetail); 
+  
+  // 1. 生成 HTML 内容
+  area.innerHTML = buildInvoiceHTML(currentDetail);
+  
+  // 2. 临时调整位置以便截图
+  area.style.position = "static";
+  area.style.left = "0";
 
-  // 2. 生成图片
-  html2canvas(area, {
+  // 3. 执行截图
+  html2canvas(area.firstElementChild, {
     scale: 2, 
     backgroundColor: "#fff",
     useCORS: true
   }).then(canvas => {
-    // 3. 创建我们在 CSS 里定义的预览层 (#tempPreview)
-    const overlay = document.createElement('div');
-    overlay.id = 'tempPreview'; // 对应你刚才加的 CSS
+    // 截图完藏回去
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+
+    const imgData = canvas.toDataURL("image/png");
+
+    // 4. 创建弹窗层显示图片 (对应上面的 CSS)
+    const div = document.createElement('div');
+    div.id = 'tempPreview';
+    div.innerHTML = `<img src="${imgData}">`;
     
-    const img = new Image();
-    img.src = canvas.toDataURL("image/png");
+    // 点击任意地方关闭
+    div.onclick = () => div.remove();
     
-    // 4. 将图片放入层中
-    overlay.appendChild(img);
-    
-    // 5. 点击任意地方关闭预览
-    overlay.onclick = () => overlay.remove();
-    
-    document.body.appendChild(overlay);
-  }).catch(() => alert("Preview failed."));
+    document.body.appendChild(div);
+  }).catch(() => {
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    alert("Preview failed.");
+  });
 }
+
 
 function downloadInvoice(){
   if(!currentDetail) return;
